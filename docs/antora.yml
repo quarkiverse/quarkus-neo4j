@@ -1,0 +1,5 @@
+name: quarkus-neo4j
+title: Quarkus Neo4j
+version: dev
+nav:
+  - modules/ROOT/nav.adoc

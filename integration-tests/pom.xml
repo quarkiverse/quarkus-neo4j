@@ -21,7 +21,7 @@
             <dependency>
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-bom</artifactId>
-                <version>Dysprosium-RELEASE</version>
+                <version>Dysprosium-SR25</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

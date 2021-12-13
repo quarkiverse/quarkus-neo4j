@@ -26,7 +26,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.version>2.5.1.Final</quarkus.version>
 
-        <neo4j-java-driver.version>4.4.1</neo4j-java-driver.version>
+        <neo4j-java-driver.version>4.4.2</neo4j-java-driver.version>
     </properties>
     <dependencyManagement>
         <dependencies>

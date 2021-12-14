@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.function.BooleanSupplier;
 
 import org.jboss.logging.Logger;
 import org.testcontainers.containers.Neo4jContainer;
@@ -18,6 +17,7 @@ import org.testcontainers.utility.MountableFile;
 
 import com.github.dockerjava.api.command.InspectContainerResponse;
 
+import io.quarkus.deployment.IsDockerWorking;
 import io.quarkus.deployment.IsNormal;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
@@ -42,18 +42,9 @@ class Neo4jDevServicesProcessor {
     static volatile Neo4jDevServiceConfig runningConfiguration;
     static volatile boolean first = true;
 
-    static final class IsDockerWorking implements BooleanSupplier {
+    private final IsDockerWorking isDockerWorking = new IsDockerWorking(true);
 
-        private final io.quarkus.deployment.IsDockerWorking delegate = new io.quarkus.deployment.IsDockerWorking(true);
-
-        @Override
-        public boolean getAsBoolean() {
-
-            return delegate.getAsBoolean();
-        }
-    }
-
-    @BuildStep(onlyIfNot = IsNormal.class, onlyIf = { IsDockerWorking.class, GlobalDevServicesConfig.Enabled.class })
+    @BuildStep(onlyIfNot = IsNormal.class, onlyIf = GlobalDevServicesConfig.Enabled.class)
     public Neo4jDevServiceBuildItem startNeo4jDevService(
             LaunchModeBuildItem launchMode,
             Neo4jBuildTimeConfig neo4jBuildTimeConfig,
@@ -118,6 +109,11 @@ class Neo4jDevServicesProcessor {
     }
 
     private ExtNeo4jContainer startNeo4j(Neo4jDevServiceConfig configuration, Optional<Duration> timeout) {
+
+        if (!isDockerWorking.getAsBoolean()) {
+            log.debug("Not starting Dev Services for Neo4j, as Docker is not working.");
+            return null;
+        }
 
         if (!configuration.devServicesEnabled) {
             log.debug("Not starting Dev Services for Neo4j, as it has been disabled in the config.");

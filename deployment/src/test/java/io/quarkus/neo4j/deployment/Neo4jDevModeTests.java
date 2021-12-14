@@ -157,7 +157,6 @@ public class Neo4jDevModeTests {
         }
     }
 
-    @Testcontainers(disabledWithoutDocker = true)
     static class WithLocallyDisabledDevServicesTest {
 
         @RegisterExtension
@@ -179,17 +178,14 @@ public class Neo4jDevModeTests {
         }
     }
 
-    @Testcontainers(disabledWithoutDocker = true)
-    static class WithExplicitPropertyTest {
+    static class WithGloballyDisabledDevServicesTest {
 
         @RegisterExtension
         static QuarkusUnitTest test = new QuarkusUnitTest()
                 .withEmptyApplication()
                 .setLogRecordPredicate(record -> true)
                 .withConfigurationResource("application.properties")
-                .overrideConfigKey("quarkus.neo4j.uri", "bolt://localhost:7687")
-                .assertLogRecords(records -> assertThat(records).extracting(LogRecord::getMessage)
-                        .contains("Not starting Dev Services for Neo4j, as there is explicit configuration present."));
+                .overrideConfigKey("quarkus.devservices.enabled", "false");
 
         @Inject
         Driver driver;

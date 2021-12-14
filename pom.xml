@@ -56,6 +56,15 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${compiler-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <!-- See https://github.com/junit-team/junit5/issues/1377#issuecomment-381964988 -->
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration combine.self="append">
+                        <excludes>
+                          <exclude/>
+                        </excludes>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>

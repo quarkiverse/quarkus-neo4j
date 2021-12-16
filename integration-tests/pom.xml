@@ -31,8 +31,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>io.quarkus</groupId>
+            <groupId>io.quarkiverse.neo4j</groupId>
             <artifactId>quarkus-neo4j</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- JAX-RS -->

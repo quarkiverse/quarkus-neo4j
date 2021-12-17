@@ -50,7 +50,7 @@ public class Neo4jDevModeTests {
     }
 
     @Testcontainers(disabledWithoutDocker = true)
-    static class DevServicesShouldBeAbleToUseFixedPorts {
+    static class DevServicesShouldBeAbleToUseFixedPortsTest {
 
         // Let it burn when there's no free port
         static final String FIXED_BOLD_PORT = PortUtils.findFreePort().get().toString();
@@ -80,7 +80,7 @@ public class Neo4jDevModeTests {
     }
 
     @Testcontainers(disabledWithoutDocker = true)
-    static class DevServicesShouldNotFailWhen7474IsUsed {
+    static class DevServicesShouldNotFailWhen7474IsUsedTest {
 
         static ServerSocket blockerFor7474;
 
@@ -112,8 +112,8 @@ public class Neo4jDevModeTests {
         static QuarkusUnitTest test = new QuarkusUnitTest()
                 .withEmptyApplication()
                 .withConfigurationResource("application.properties")
-                .setBeforeAllCustomizer(DevServicesShouldNotFailWhen7474IsUsed::block7474)
-                .setAfterAllCustomizer(DevServicesShouldNotFailWhen7474IsUsed::unblock7474)
+                .setBeforeAllCustomizer(DevServicesShouldNotFailWhen7474IsUsedTest::block7474)
+                .setAfterAllCustomizer(DevServicesShouldNotFailWhen7474IsUsedTest::unblock7474)
                 .setLogRecordPredicate(record -> true)
                 .assertLogRecords(records -> assertThat(records)
                         .isNotEmpty()

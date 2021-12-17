@@ -162,9 +162,7 @@ class Neo4jDevServicesProcessor {
         static ExtNeo4jContainer of(Neo4jDevServiceConfig config) {
 
             var container = new ExtNeo4jContainer(DockerImageName.parse(config.imageName).asCompatibleSubstituteFor("neo4j"));
-            config.fixedBoltPort.ifPresent(port -> {
-                container.addFixedExposedPort(port, DEFAULT_BOLT_PORT);
-            });
+            config.fixedBoltPort.ifPresent(port -> container.addFixedExposedPort(port, DEFAULT_BOLT_PORT));
             config.fixedHttpPort.ifPresent(port -> container.addFixedExposedPort(port, DEFAULT_HTTP_PORT));
 
             var extensionScript = "/neo4j_dev_services_ext.sh";

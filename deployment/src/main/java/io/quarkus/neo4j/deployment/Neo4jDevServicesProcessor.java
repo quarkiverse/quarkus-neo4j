@@ -191,7 +191,7 @@ class Neo4jDevServicesProcessor {
             }
 
             var mappedPort = getMappedPort(DEFAULT_BOLT_PORT);
-            var command = String.format("export NEO4J_dbms_connector_bolt_advertised__address=bolt://%s:%d\n", getHost(),
+            var command = String.format("export NEO4J_dbms_connector_bolt_advertised__address=%s:%d\n", getHost(),
                     mappedPort);
             copyFileToContainer(Transferable.of(command.getBytes(StandardCharsets.UTF_8)), "/testcontainers_env");
         }

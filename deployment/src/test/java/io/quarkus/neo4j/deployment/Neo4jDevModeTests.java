@@ -137,7 +137,7 @@ public class Neo4jDevModeTests {
                 .withEmptyApplication()
                 .setLogRecordPredicate(record -> true)
                 .withConfigurationResource("application.properties")
-                .overrideConfigKey("quarkus.neo4j.devservices.image-name", "neo4j:4.3-enterprise")
+                .overrideConfigKey("quarkus.neo4j.devservices.image-name", "neo4j:4.4-enterprise")
                 .overrideConfigKey("quarkus.neo4j.devservices.additional-env.NEO4J_ACCEPT_LICENSE_AGREEMENT", "yes")
                 .assertLogRecords(records -> assertThat(records).extracting(LogRecord::getMessage)
                         .contains("Dev Services started a Neo4j container reachable at %s"));

@@ -35,6 +35,7 @@ class Neo4jDevServicesProcessor {
     private static final Logger log = Logger.getLogger("io.quarkus.neo4j.deployment");
 
     private static final String NEO4J_URI = "quarkus.neo4j.uri";
+    private static final String NEO4J_BROWSER_URL = "quarkus.neo4j.browser-url";
     private static final String NEO4J_USER_PROP = "quarkus.neo4j.authentication.username";
     private static final String NEO4J_PASSWORD_PROP = "quarkus.neo4j.authentication.password";
 
@@ -72,6 +73,8 @@ class Neo4jDevServicesProcessor {
             if (neo4jContainer != null) {
                 devServicePropertiesProducer.produce(
                         new DevServicesConfigResultBuildItem(NEO4J_URI, neo4jContainer.getBoltUrl()));
+                devServicePropertiesProducer.produce(
+                        new DevServicesConfigResultBuildItem(NEO4J_BROWSER_URL, neo4jContainer.getBrowserUrl()));
                 devServicePropertiesProducer.produce(new DevServicesConfigResultBuildItem(NEO4J_USER_PROP, "neo4j"));
                 devServicePropertiesProducer.produce(new DevServicesConfigResultBuildItem(NEO4J_PASSWORD_PROP,
                         neo4jContainer.getAdminPassword()));

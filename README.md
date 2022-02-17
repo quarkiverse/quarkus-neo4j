@@ -7,13 +7,17 @@
 
 ## Introduction
 
-Quarkus Neo4j is a Quarkus extension to connect to the [Neo4j graph datastore](https://neo4j.com).
+Quarkus Neo4j is a Quarkus extension to connect to the [Neo4j graph database](https://neo4j.com).
 
-It enables the use of the Neo4j client in native executables and provide configuration properties to configure the client.
+It enables the use of the [Neo4j Java Driver](https://github.com/neo4j/neo4j-java-driver) in both JVM mode and native executables. It provide configuration properties to configure all relevant aspects of the driver.
 
 ## Documentation
 
-The documentation for this extension can be found [here](https://quarkiverse.github.io/quarkiverse-docs/quarkus-neo4j/dev/index.html).
+The documentation for this extension can be found [here](https://quarkiverse.github.io/quarkiverse-docs/quarkus-neo4j/dev/index.html) while the documentation for the Neo4j Java Driver itself is in the official [manual](https://neo4j.com/docs/java-manual/4.4/).
+
+Other extension that build on this extension or are known to work well with it:
+
+* [Neo4j-Migrations](https://michael-simons.github.io/neo4j-migrations/current/#download_quarkus), an extension that allows running Cypher scripts in a controlled manner for migrating or refactoring databases
 
 ## Contributors ✨
 

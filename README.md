@@ -29,6 +29,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="http://michael-simons.eu"><img src="https://avatars.githubusercontent.com/u/526383?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Michael Simons</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=michael-simons" title="Code">💻</a> <a href="#maintenance-michael-simons" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://lesincroyableslivres.fr/"><img src="https://avatars.githubusercontent.com/u/1279749?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Guillaume Smet</b></sub></a><br /><a href="#maintenance-gsmet" title="Maintenance">🚧</a> <a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=gsmet" title="Documentation">📖</a></td>
     <td align="center"><a href="http://www.phillip-kruger.com"><img src="https://avatars.githubusercontent.com/u/6836179?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Phillip Krüger</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=phillip-kruger" title="Code">💻</a></td>
   </tr>
 </table>

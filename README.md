@@ -15,9 +15,10 @@ It enables the use of the [Neo4j Java Driver](https://github.com/neo4j/neo4j-jav
 
 The documentation for this extension can be found [here](https://quarkiverse.github.io/quarkiverse-docs/quarkus-neo4j/dev/index.html) while the documentation for the Neo4j Java Driver itself is in the official [manual](https://neo4j.com/docs/java-manual/4.4/).
 
-Other extension that build on this extension or are known to work well with it:
+Other extension that build on this extension and are known to work well with it:
 
 * [Neo4j-Migrations](https://michael-simons.github.io/neo4j-migrations/current/#download_quarkus), an extension that allows running Cypher scripts in a controlled manner for migrating or refactoring databases
+* [Neo4j-OGM for Quarkus](https://github.com/michael-simons/neo4j-ogm-quarkus), an extension bringing in Neo4j-OGM and a couple of shims allowing to use Neo4js object mapper without too much hassle inside Quarkus
 
 ## Contributors ✨
 

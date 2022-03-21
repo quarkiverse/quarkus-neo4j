@@ -13,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.eclipse.microprofile.context.ThreadContext;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
@@ -30,6 +31,9 @@ public class Neo4jResource {
 
     @Inject
     Driver driver;
+
+    @Inject
+    ThreadContext threadContext;
 
     @GET
     @Path("/blocking")
@@ -54,8 +58,8 @@ public class Neo4jResource {
     @Produces(APPLICATION_JSON)
     public CompletionStage<List<Integer>> doStuffWithNeo4jAsynchronous() {
         AsyncSession session = driver.asyncSession();
-        return session
-                .runAsync("UNWIND range(1, 3) AS x RETURN x")
+        return threadContext.withContextCapture(session
+                .runAsync("UNWIND range(1, 3) AS x RETURN x"))
                 .thenCompose(cursor -> cursor.listAsync(record -> record.get("x").asInt()))
                 .whenComplete((records, error) -> {
                     if (records != null) {

@@ -1,12 +1,26 @@
 package io.quarkus.it.neo4j;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.matchesRegex;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.ws.rs.core.Response.Status;
+
 import org.hamcrest.Matcher;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
@@ -17,11 +31,84 @@ import io.restassured.http.ContentType;
  * Can quickly start a matching database with:
  *
  * <pre>
- *     docker run --publish=7474:7474 --publish=7687:7687 -e 'NEO4J_AUTH=neo4j/music' neo4j/neo4j-experimental:4.0.0-rc01
+ *     docker run --publish=7474:7474 --publish=7687:7687 -e 'NEO4J_AUTH=neo4j/secret' neo4j:4.4
  * </pre>
  */
 @QuarkusTest
 public class Neo4jFunctionalityTest {
+
+    static Driver driver;
+
+    private Long apfelId;
+
+    @BeforeAll
+    public static void connectDriver() {
+
+        var uri = System.getProperty("neo4j.uri", "bolt://localhost:7687");
+        var password = System.getProperty("neo4j.password", "secret");
+        driver = GraphDatabase.driver(uri, AuthTokens.basic("neo4j", password));
+    }
+
+    @AfterAll
+    public static void closeDriver() {
+
+        driver.close();
+    }
+
+    @BeforeEach
+    public void prepareFruits() {
+
+        try (var session = driver.session()) {
+
+            session.run("MATCH (f:Fruit) DETACH DELETE f").consume();
+            apfelId = session.run("MERGE (f:Fruit {name: 'Apfel'}) RETURN id(f)")
+                    .single().get(0).asLong();
+        }
+    }
+
+    @Test
+    void getFruitsShouldWork() {
+
+        var response = RestAssured.given()
+                .when().get("/fruits/")
+                .then().statusCode(Status.OK.getStatusCode())
+                .extract().jsonPath();
+
+        assertEquals(apfelId, response.getLong("[0].id"));
+        assertEquals("Apfel", response.getString("[0].name"));
+    }
+
+    @Test
+    void createFruitsShouldWork() {
+
+        RestAssured.given()
+                .body(new Fruit("Kartoffel"))
+                .when().post("/fruits/")
+                .then().statusCode(Status.CREATED.getStatusCode())
+                .header("Location", matchesRegex("/fruits/\\d+"));
+    }
+
+    @Test
+    void getSingleFruitShouldWork() {
+
+        var response = RestAssured.given()
+                .when().get("/fruits/" + apfelId)
+                .then().statusCode(Status.OK.getStatusCode())
+                .extract().jsonPath();
+
+        assertEquals(apfelId, response.getLong("id"));
+        assertEquals("Apfel", response.getString("name"));
+    }
+
+    @Test
+    void deleteFruitShouldWork() {
+
+        var response = RestAssured.given()
+                .when().delete("/fruits/" + apfelId)
+                .prettyPeek()
+                .then().statusCode(Status.NO_CONTENT.getStatusCode())
+                .extract().jsonPath();
+    }
 
     @Test
     public void testBlockingNeo4jFunctionality() {
@@ -33,7 +120,7 @@ public class Neo4jFunctionalityTest {
         RestAssured.given()
                 .when().get("/neo4j/asynchronous")
                 .then().statusCode(200)
-                .body(is(equalTo(Stream.of(1, 2, 3).map(i -> i.toString()).collect(Collectors.joining(",", "[", "]")))));
+                .body(is(equalTo(Stream.of(1, 2, 3).map(Object::toString).collect(Collectors.joining(",", "[", "]")))));
     }
 
     @Test

@@ -1,6 +1,6 @@
 # Quarkus Neo4j
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.neo4j/quarkus-neo4j?logo=apache-maven&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.neo4j/quarkus-neo4j)
@@ -32,6 +32,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://michael-simons.eu"><img src="https://avatars.githubusercontent.com/u/526383?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Michael Simons</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=michael-simons" title="Code">💻</a> <a href="#maintenance-michael-simons" title="Maintenance">🚧</a></td>
     <td align="center"><a href="https://lesincroyableslivres.fr/"><img src="https://avatars.githubusercontent.com/u/1279749?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Guillaume Smet</b></sub></a><br /><a href="#maintenance-gsmet" title="Maintenance">🚧</a> <a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=gsmet" title="Documentation">📖</a></td>
     <td align="center"><a href="http://www.phillip-kruger.com"><img src="https://avatars.githubusercontent.com/u/6836179?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Phillip Krüger</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=phillip-kruger" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/cescoffier"><img src="https://avatars.githubusercontent.com/u/402301?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Clement Escoffier</b></sub></a><br /><a href="#question-cescoffier" title="Answering Questions">💬</a></td>
   </tr>
 </table>
 

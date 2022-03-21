@@ -158,15 +158,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <neo4j.uri>${neo4j.uri}</neo4j.uri>
-                                <neo4j.password>${neo4j.password}</neo4j.password>
-                            </systemPropertyVariables>
-                        </configuration>
-                    </plugin>
-                    <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <executions>
                             <execution>
@@ -179,8 +170,6 @@
                                         <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                         <maven.home>${maven.home}</maven.home>
-                                        <neo4j.uri>${neo4j.uri}</neo4j.uri>
-                                        <neo4j.password>${neo4j.password}</neo4j.password>
                                     </systemPropertyVariables>
                                 </configuration>
                             </execution>

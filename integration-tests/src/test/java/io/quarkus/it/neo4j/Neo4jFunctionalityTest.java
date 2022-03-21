@@ -8,6 +8,8 @@ import static org.hamcrest.Matchers.matchesRegex;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.IOException;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,10 +44,20 @@ public class Neo4jFunctionalityTest {
     private Long apfelId;
 
     @BeforeAll
-    public static void connectDriver() {
+    public static void connectDriver() throws IOException {
 
-        var uri = System.getProperty("neo4j.uri", "bolt://localhost:7687");
-        var password = System.getProperty("neo4j.password", "secret");
+        var properties = new Properties();
+        properties.load(Neo4jFunctionalityTest.class.getResourceAsStream("/application.properties"));
+        var defaultUri = "bolt://localhost:7687";
+        var uri = properties.getProperty("quarkus.neo4j.uri", defaultUri);
+        if (uri.startsWith("$")) {
+            uri = defaultUri;
+        }
+        var defaultPassword = "secret";
+        var password = properties.getProperty("quarkus.neo4j.authentication.password", defaultPassword);
+        if (uri.startsWith("$")) {
+            password = defaultPassword;
+        }
         driver = GraphDatabase.driver(uri, AuthTokens.basic("neo4j", password));
     }
 

@@ -33,6 +33,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "cescoffier",
+      "name": "Clement Escoffier",
+      "avatar_url": "https://avatars.githubusercontent.com/u/402301?v=4",
+      "profile": "https://github.com/cescoffier",
+      "contributions": [
+        "question"
+      ]
     }
   ],
   "contributorsPerLine": 7,

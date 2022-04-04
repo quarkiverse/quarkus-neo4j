@@ -1,6 +1,7 @@
 package io.quarkus.it.neo4j;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -91,13 +92,36 @@ public class Neo4jFunctionalityTest {
     }
 
     @Test
+    void getReactiveFruitsShouldWork() {
+
+        RestAssured.given()
+                .when().get("/reactivefruits/")
+                .then().statusCode(Status.OK.getStatusCode())
+                .statusCode(200)
+                .body(containsString("data:Apfel"));
+    }
+
+    @Test
     void createFruitsShouldWork() {
 
         RestAssured.given()
+                .contentType(ContentType.JSON)
                 .body(new Fruit("Kartoffel"))
                 .when().post("/fruits/")
                 .then().statusCode(Status.CREATED.getStatusCode())
                 .header("Location", matchesRegex("/fruits/\\d+"));
+    }
+
+    @Test
+    void createReactiveFruitsShouldWork() {
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(new Fruit("Kartoffel"))
+                .when().post("/reactivefruits/")
+                .prettyPeek()
+                .then().statusCode(Status.CREATED.getStatusCode())
+                .body(matchesRegex("/fruits/\\d+"));
     }
 
     @Test

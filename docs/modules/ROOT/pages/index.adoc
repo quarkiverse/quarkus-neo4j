@@ -350,51 +350,34 @@ If you are not familiar with Mutiny, check xref:mutiny-primer.adoc[Mutiny - an i
 The reactive fruit resources streams the name of all fruits:
 
 [source,java]
-.src/main/java/org/acme/neo4j/ReactiveFruitResource.java
+.ReactiveFruitResource.java
 ----
-package org.acme.neo4j;
-
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.Uni;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.reactive.RxResult;
-import org.reactivestreams.Publisher;
-
-@Path("reactivefruits")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class ReactiveFruitResource {
-
-    @Inject
-    Driver driver;
-
-    @GET
-    @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Publisher<String> get() {
-        // Create a stream from a resource we can close in a finalizer:
-        return Multi.createFrom().resource(driver::rxSession,
-                session -> session.readTransaction(tx -> {
-                    RxResult result = tx.run("MATCH (f:Fruit) RETURN f.name as name ORDER BY f.name");
-                    return Multi.createFrom().publisher(result.records())
-                            .map(record -> record.get("name").asString());
-                })
-        ).withFinalizer(session -> {
-            return Uni.createFrom().publisher(session.close());
-        });
-    }
-}
+include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/ReactiveFruitResource.java[tag=get,indent=0,tabsize=2]
 ----
+<.> A finalizer that will close a Neo4j driver session in a non-blocking fashion
+<.> The `Multi.createFrom().resource()` is used to defer the creation of session until the publisher is subscribed to
+<.> When the publisher is done, the finalizer will be called
 
 `driver.rxSession()` returns a reactive session.
 It exposes its API based on http://www.reactive-streams.org[Reactive Streams], most prominently, as `org.reactivestreams.Publisher`.
 Those can be used directly, but we found it easier and more expressive to wrap them in reactive types such as the one provided by Mutiny.
 Typically, in the previous code, the session is closed when the stream completes, fails or the subscriber cancels.
+
+If you want to return a Mutiny! `Uni` object, you need to be very careful before you convert a `Multi` into a `Uni`:
+The conversion works in such a way, that the first item is emitted and then a cancellation signal is sent to the publisher,
+that will propagate upto the drivers' session, indicating a cancellation of the transaction, thus doing a rollback.
+
+In most cases you are better off returning a `Multi` or just a generic `Publisher`. If you need a `Uni`, you can still realize
+this with an emitter:
+
+[source,java]
+.ReactiveFruitResource.java#create
+----
+include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/ReactiveFruitResource.java[tag=create,indent=0,tabsize=2]
+----
+<.> Here we use `Uni.createFrom().emitter()` to retrieve an `UniEmitter` that we use in 2.
+<.> Notice how we subscribe to a `Multi` setup in a similar fashion as in the prior example. The subscription will emit the one
+    and only item via the emitter, without a cancellation event.
 
 == Configuration Reference
 

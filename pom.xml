@@ -25,7 +25,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.version>2.9.2.Final</quarkus.version>
-        <assertj.version>3.22.0</assertj.version>
+        <assertj.version>3.23.1</assertj.version>
 
         <neo4j-java-driver.version>4.4.6</neo4j-java-driver.version>
     </properties>

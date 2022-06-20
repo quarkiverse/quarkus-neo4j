@@ -122,7 +122,8 @@ a| [[quarkus-neo4j_quarkus.neo4j.trust-settings.strategy]]`link:#quarkus-neo4j_q
 [.description]
 --
 Configures which trust strategy to apply when using encrypted traffic.
---|`trust-all-certificates`, `trust-custom-ca-signed-certificates`, `trust-system-ca-signed-certificates` 
+-- a|
+`trust-all-certificates`, `trust-custom-ca-signed-certificates`, `trust-system-ca-signed-certificates` 
 |`trust-system-ca-signed-certificates`
 
 

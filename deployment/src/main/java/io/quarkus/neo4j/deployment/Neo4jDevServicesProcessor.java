@@ -1,6 +1,5 @@
 package io.quarkus.neo4j.deployment;
 
-import java.io.Closeable;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
@@ -17,12 +16,13 @@ import org.testcontainers.utility.MountableFile;
 
 import com.github.dockerjava.api.command.InspectContainerResponse;
 
+import io.quarkus.deployment.Feature;
 import io.quarkus.deployment.IsDockerWorking;
 import io.quarkus.deployment.IsNormal;
-import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
-import io.quarkus.deployment.builditem.DevServicesConfigResultBuildItem;
+import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
+import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.console.ConsoleInstalledBuildItem;
 import io.quarkus.deployment.console.StartupLogCompressor;
@@ -39,17 +39,16 @@ class Neo4jDevServicesProcessor {
     private static final String NEO4J_USER_PROP = "quarkus.neo4j.authentication.username";
     private static final String NEO4J_PASSWORD_PROP = "quarkus.neo4j.authentication.password";
 
-    static volatile Closeable closeable;
+    static volatile RunningDevService devService;
     static volatile Neo4jDevServiceConfig runningConfiguration;
     static volatile boolean first = true;
 
     private final IsDockerWorking isDockerWorking = new IsDockerWorking(true);
 
     @BuildStep(onlyIfNot = IsNormal.class, onlyIf = GlobalDevServicesConfig.Enabled.class)
-    public Neo4jDevServiceBuildItem startNeo4jDevService(
+    public DevServicesResultBuildItem startNeo4jDevService(
             LaunchModeBuildItem launchMode,
             Neo4jBuildTimeConfig neo4jBuildTimeConfig,
-            BuildProducer<DevServicesConfigResultBuildItem> devServicePropertiesProducer,
             Optional<ConsoleInstalledBuildItem> consoleInstalledBuildItem,
             CuratedApplicationShutdownBuildItem closeBuildItem,
             LoggingSetupBuildItem loggingSetupBuildItem,
@@ -57,9 +56,9 @@ class Neo4jDevServicesProcessor {
 
         var configuration = new Neo4jDevServiceConfig(neo4jBuildTimeConfig.devservices);
 
-        if (closeable != null) {
+        if (devService != null) {
             if (configuration.equals(runningConfiguration)) {
-                return null;
+                return devService.toBuildItem();
             }
             shutdownNeo4j();
             runningConfiguration = null;
@@ -71,21 +70,18 @@ class Neo4jDevServicesProcessor {
         try {
             var neo4jContainer = startNeo4j(configuration, globalDevServicesConfig.timeout);
             if (neo4jContainer != null) {
-                devServicePropertiesProducer.produce(
-                        new DevServicesConfigResultBuildItem(NEO4J_URI, neo4jContainer.getBoltUrl()));
-                devServicePropertiesProducer.produce(
-                        new DevServicesConfigResultBuildItem(NEO4J_BROWSER_URL, neo4jContainer.getBrowserUrl()));
-                devServicePropertiesProducer.produce(new DevServicesConfigResultBuildItem(NEO4J_USER_PROP, "neo4j"));
-                devServicePropertiesProducer.produce(new DevServicesConfigResultBuildItem(NEO4J_PASSWORD_PROP,
-                        neo4jContainer.getAdminPassword()));
-
+                var config = Map.of(
+                        NEO4J_URI, neo4jContainer.getBoltUrl(),
+                        NEO4J_BROWSER_URL, neo4jContainer.getBrowserUrl(),
+                        NEO4J_PASSWORD_PROP, neo4jContainer.getAdminPassword());
                 log.infof("Dev Services started a Neo4j container reachable at %s", neo4jContainer.getBoltUrl());
                 log.infof("Neo4j Browser is reachable at %s", neo4jContainer.getBrowserUrl());
                 log.infof("The username for both endpoints is `%s`, authenticated by `%s`", "neo4j",
                         neo4jContainer.getAdminPassword());
                 log.infof("Connect via Cypher-Shell: cypher-shell -u %s -p %s -a %s", "neo4j",
                         neo4jContainer.getAdminPassword(), neo4jContainer.getBoltUrl());
-                closeable = neo4jContainer::close;
+                devService = new RunningDevService(Feature.NEO4J.getName(), neo4jContainer.getContainerId(),
+                        neo4jContainer::close, config);
             }
         } catch (Throwable t) {
             compressor.closeAndDumpCaptured();
@@ -96,19 +92,18 @@ class Neo4jDevServicesProcessor {
         if (first) {
             first = false;
             Runnable closeTask = () -> {
-                if (closeable != null) {
+                if (devService != null) {
                     shutdownNeo4j();
                     log.info("Dev Services for Neo4j shut down.");
                 }
                 first = true;
-                closeable = null;
                 runningConfiguration = null;
             };
             closeBuildItem.addCloseTask(closeTask, true);
         }
         runningConfiguration = configuration;
 
-        return new Neo4jDevServiceBuildItem();
+        return devService == null ? null : devService.toBuildItem();
     }
 
     private ExtNeo4jContainer startNeo4j(Neo4jDevServiceConfig configuration, Optional<Duration> timeout) {
@@ -146,13 +141,13 @@ class Neo4jDevServicesProcessor {
     }
 
     private void shutdownNeo4j() {
-        if (closeable != null) {
+        if (devService != null) {
             try {
-                closeable.close();
+                devService.close();
             } catch (Throwable e) {
                 log.error("Failed to stop Neo4j container", e);
             } finally {
-                closeable = null;
+                devService = null;
             }
         }
     }

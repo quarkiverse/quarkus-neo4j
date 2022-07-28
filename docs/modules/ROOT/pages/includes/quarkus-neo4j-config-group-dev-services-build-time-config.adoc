@@ -1,3 +1,5 @@
+
+:summaryTableId: quarkus-neo4j-config-group-dev-services-build-time-config
 [.configuration-legend]
 icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
 [.configuration-reference, cols="80,.^10,.^10"]
@@ -13,6 +15,8 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 [.description]
 --
 If DevServices has been explicitly enabled or disabled. DevServices is generally enabled by default, unless there is an existing configuration present. When DevServices is enabled Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode.
+
+Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_ENABLED+++`
 --|boolean 
 |
 
@@ -22,6 +26,8 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 [.description]
 --
 The container image name to use, for container based DevServices providers.
+
+Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_IMAGE_NAME+++`
 --|string 
 |`neo4j:4.3`
 
@@ -31,6 +37,8 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 [.description]
 --
 This value can be used to specify the port to which the bolt-port of the container is exposed. It must be a free port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be logged on which port the Neo4j container is reachable over bolt.
+
+Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_BOLT_PORT+++`
 --|int 
 |
 
@@ -40,6 +48,8 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 [.description]
 --
 This value can be used to specify the port to which the http-port of the container is exposed. It must be a free port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be logged on which port the Neo4j Browser is available.
+
+Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_HTTP_PORT+++`
 --|int 
 |
 
@@ -49,6 +59,8 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 [.description]
 --
 Additional environment entries that can be added to the container before its start.
+
+Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_ADDITIONAL_ENV+++`
 --|`Map<String,String>` 
 |
 

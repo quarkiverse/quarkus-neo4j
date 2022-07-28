@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.quarkiverse.neo4j</groupId>
         <artifactId>quarkus-neo4j-parent</artifactId>
-        <version>1.3.3-SNAPSHOT</version>
+        <version>1.4.0</version>
     </parent>
     <artifactId>quarkus-neo4j</artifactId>
     <name>Quarkus - Neo4j - Runtime</name>

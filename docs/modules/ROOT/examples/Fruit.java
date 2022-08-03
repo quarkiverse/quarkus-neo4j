@@ -1,0 +1,1 @@
+../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/Fruit.java

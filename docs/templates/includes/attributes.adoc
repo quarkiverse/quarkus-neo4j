@@ -14,3 +14,5 @@
 :quickstarts-archive-url: https://github.com/quarkusio/quarkus-quickstarts/archive/main.zip
 :quickstarts-blob-url: https://github.com/quarkusio/quarkus-quickstarts/blob/main
 :quickstarts-tree-url: https://github.com/quarkusio/quarkus-quickstarts/tree/main
+
+:examples-dir: ./../examples/

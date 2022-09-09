@@ -57,7 +57,7 @@ As with some other guides, the application shall manage fruit entities.
 ----
 package org.acme.neo4j;
 
-include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/Fruit.java[tag=intro,indent=0,tabsize=2]
+include::{examples-dir}/Fruit.java[tag=intro,indent=0,tabsize=2]
 ----
 
 == Prerequisites
@@ -183,7 +183,7 @@ We add the following method to the `Fruit`, as a convenient way to create them:
 
 [source,java]
 ----
-include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/Fruit.java[tag=builder,indent=0,tabsize=2]
+include::{examples-dir}/Fruit.java[tag=builder,indent=0,tabsize=2]
 ----
 
 Add a `FruitResource` skeleton like this and `@Inject` a `org.neo4j.driver.Driver` instance and a `ThreadContext` instance:
@@ -193,7 +193,7 @@ Add a `FruitResource` skeleton like this and `@Inject` a `org.neo4j.driver.Drive
 ----
 package org.acme.neo4j;
 
-include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/FruitResource.java[tag=skeleton,indent=0,tabsize=2]
+include::{examples-dir}/FruitResource.java[tag=skeleton,indent=0,tabsize=2]
 ----
 <.> The `ThreadContext` is related to context propagation with completion stage. A completion stage,
     unlike Mutiny, does not have a hook to automatically "capture and restore" the context.
@@ -206,7 +206,7 @@ Add the following method to the fruit resource:
 [source,java]
 .FruitResource#get
 ----
-include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/FruitResource.java[tag=reading,indent=0,tabsize=2]
+include::{examples-dir}/FruitResource.java[tag=reading,indent=0,tabsize=2]
 ----
 <.> Open a new, asynchronous session with Neo4j
 <.> Execute a query. This is a Cypher statement.
@@ -240,7 +240,7 @@ It uses transaction functions of the driver:
 [source,java]
 .FruitResource#create
 ----
-include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/FruitResource.java[tag=create,indent=0,tabsize=2]
+include::{examples-dir}/FruitResource.java[tag=create,indent=0,tabsize=2]
 ----
 
 As you can see, we are now using a Cypher statement with named parameters (The `$name` of the fruit).
@@ -267,7 +267,7 @@ We also add some exception handling, in case the resource is called with an inva
 [source,java]
 .FruitResource#getSingle
 ----
-include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/FruitResource.java[tag=getSingle,indent=0,tabsize=2]
+include::{examples-dir}/FruitResource.java[tag=getSingle,indent=0,tabsize=2]
 ----
 
 A request may look like this:
@@ -288,7 +288,7 @@ Finally, we want to get rid of fruits again and we add the `DELETE` method:
 [source,java]
 .FruitResource#delete
 ----
-include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/FruitResource.java[tag=delete,indent=0,tabsize=2]
+include::{examples-dir}/FruitResource.java[tag=delete,indent=0,tabsize=2]
 ----
 <1> There is no result for us, only a summary of the query executed.
 
@@ -352,7 +352,7 @@ The reactive fruit resources streams the name of all fruits:
 [source,java]
 .ReactiveFruitResource.java
 ----
-include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/ReactiveFruitResource.java[tag=get,indent=0,tabsize=2]
+include::{examples-dir}/ReactiveFruitResource.java[tag=get,indent=0,tabsize=2]
 ----
 <.> A finalizer that will close a Neo4j driver session in a non-blocking fashion
 <.> The `Multi.createFrom().resource()` is used to defer the creation of session until the publisher is subscribed to
@@ -373,7 +373,7 @@ this with an emitter:
 [source,java]
 .ReactiveFruitResource.java#create
 ----
-include::../../../../integration-tests/src/main/java/io/quarkus/it/neo4j/ReactiveFruitResource.java[tag=create,indent=0,tabsize=2]
+include::{examples-dir}/ReactiveFruitResource.java[tag=create,indent=0,tabsize=2]
 ----
 <.> Here we use `Uni.createFrom().emitter()` to retrieve an `UniEmitter` that we use in 2.
 <.> Notice how we subscribe to a `Multi` setup in a similar fashion as in the prior example. The subscription will emit the one

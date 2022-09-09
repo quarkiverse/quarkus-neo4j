@@ -22,7 +22,7 @@ public class DevServicesBuildTimeConfig {
     /**
      * The container image name to use, for container based DevServices providers.
      */
-    @ConfigItem(defaultValue = "neo4j:4.3")
+    @ConfigItem(defaultValue = "neo4j:4.4")
     public String imageName;
 
     /**

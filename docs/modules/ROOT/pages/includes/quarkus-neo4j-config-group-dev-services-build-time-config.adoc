@@ -29,7 +29,7 @@ The container image name to use, for container based DevServices providers.
 
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_IMAGE_NAME+++`
 --|string 
-|`neo4j:4.3`
+|`neo4j:4.4`
 
 
 a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.bolt-port]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.bolt-port[quarkus.neo4j.devservices.bolt-port]`

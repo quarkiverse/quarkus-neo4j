@@ -1,6 +1,6 @@
 = Quarkus Neo4j
 
-:neo4j_version: 4.3
+:neo4j_version: 4.4
 
 include::./includes/attributes.adoc[]
 

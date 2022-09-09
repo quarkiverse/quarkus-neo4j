@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>org.neo4j.driver</groupId>
-            <artifactId>neo4j-java-driver</artifactId>
+            <artifactId>neo4j-java-driver-all</artifactId>
         </dependency>
 
         <dependency>

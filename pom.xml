@@ -40,7 +40,7 @@
             </dependency>
             <dependency>
                 <groupId>org.neo4j.driver</groupId>
-                <artifactId>neo4j-java-driver</artifactId>
+                <artifactId>neo4j-java-driver-all</artifactId>
                 <version>${neo4j-java-driver.version}</version>
             </dependency>
             <dependency>

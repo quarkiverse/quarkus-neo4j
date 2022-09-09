@@ -13,7 +13,7 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.SessionConfig;
-import org.neo4j.driver.internal.retry.ExponentialBackoffRetryLogic;
+import org.neo4j.driver.exceptions.RetryableException;
 import org.neo4j.driver.summary.ResultSummary;
 import org.neo4j.driver.summary.ServerInfo;
 
@@ -54,7 +54,7 @@ public class Neo4jHealthCheck implements HealthCheck {
             try {
                 return runHealthCheckQuery(builder);
             } catch (Throwable exception) {
-                if (ExponentialBackoffRetryLogic.isRetryable(exception)) {
+                if (exception instanceof RetryableException) {
                     log.warn(MESSAGE_SESSION_EXPIRED);
                     return runHealthCheckQuery(builder);
                 }

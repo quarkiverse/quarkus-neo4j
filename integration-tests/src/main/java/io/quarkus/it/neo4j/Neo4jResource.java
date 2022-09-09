@@ -99,8 +99,8 @@ public class Neo4jResource {
                     .run("MATCH (f:Framework {name: $name}) - [:CAN_USE] -> (n) RETURN f, n",
                             Values.parameters("name", "Quarkus"));
             result.forEachRemaining(
-                    record -> System.out.println(String.format("%s works with %s", record.get("n").get("name").asString(),
-                            record.get("f").get("name").asString())));
+                    record -> System.out.printf("%s works with %s%n", record.get("n").get("name").asString(),
+                            record.get("f").get("name").asString()));
             transaction.commit();
         }
     }

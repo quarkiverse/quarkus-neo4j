@@ -109,7 +109,7 @@ public class Neo4jFunctionalityTest {
                 .body(new Fruit("Kartoffel"))
                 .when().post("/fruits/")
                 .then().statusCode(Status.CREATED.getStatusCode())
-                .header("Location", matchesRegex("https?://.+/fruits/\\d+"));
+                .header("Location", matchesRegex("(?:https?://.+/)?fruits/\\d+"));
     }
 
     @Test

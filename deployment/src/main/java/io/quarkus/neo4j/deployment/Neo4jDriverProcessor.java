@@ -13,6 +13,7 @@ import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.ExtensionSslNativeSupportBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedPackageBuildItem;
 import io.quarkus.deployment.metrics.MetricsFactoryConsumerBuildItem;
 import io.quarkus.neo4j.runtime.Neo4jConfiguration;
 import io.quarkus.neo4j.runtime.Neo4jDriverRecorder;
@@ -63,4 +64,8 @@ class Neo4jDriverProcessor {
         metrics.produce(new MetricsFactoryConsumerBuildItem(metricsFactoryConsumer));
     }
 
+    @BuildStep
+    RuntimeInitializedPackageBuildItem deferNettySSLToRuntime() {
+        return new RuntimeInitializedPackageBuildItem("io.netty.handler.ssl");
+    }
 }

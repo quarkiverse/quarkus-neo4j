@@ -13,6 +13,7 @@ import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.ExtensionSslNativeSupportBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedPackageBuildItem;
 import io.quarkus.deployment.metrics.MetricsFactoryConsumerBuildItem;
 import io.quarkus.neo4j.runtime.Neo4jConfiguration;
@@ -67,5 +68,28 @@ class Neo4jDriverProcessor {
     @BuildStep
     RuntimeInitializedPackageBuildItem deferNettySSLToRuntime() {
         return new RuntimeInitializedPackageBuildItem("io.netty.handler.ssl");
+    }
+
+    @BuildStep
+    void deferMiscellaneousClassesToRuntime(BuildProducer<RuntimeInitializedClassBuildItem> classes) {
+
+        // Those are the ones we use, there are more in the package and if we move the whole package some Quarkus stuff
+        // would need to be deferred too
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.AbstractReferenceCountedByteBuf"));
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.ByteBufAllocator"));
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.ByteBufUtil"));
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.ByteBufUtil$HexUtil"));
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.PooledByteBufAllocator"));
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.UnpooledHeapByteBuf"));
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.UnreleasableByteBuf"));
+
+        classes.produce(new RuntimeInitializedClassBuildItem("org.neo4j.driver.internal.async.connection.BoltProtocolUtil"));
+        classes.produce(new RuntimeInitializedClassBuildItem("org.neo4j.driver.internal.async.connection.ChannelAttributes"));
+        classes.produce(
+                new RuntimeInitializedClassBuildItem("org.neo4j.driver.internal.async.connection.ChannelConnectedListener"));
+
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.util.AbstractReferenceCounted"));
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.util.internal.logging.Log4JLogger"));
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.internal.tcnative.SSL"));
     }
 }

@@ -16,7 +16,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 --
 If DevServices has been explicitly enabled or disabled. DevServices is generally enabled by default, unless there is an existing configuration present. When DevServices is enabled Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_ENABLED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_ENABLED+++`
+endif::add-copy-button-to-env-var[]
 --|boolean 
 |
 
@@ -27,7 +32,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 --
 The container image name to use, for container based DevServices providers.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_IMAGE_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_IMAGE_NAME+++`
+endif::add-copy-button-to-env-var[]
 --|string 
 |`neo4j:4.4`
 
@@ -38,7 +48,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 --
 This value can be used to specify the port to which the bolt-port of the container is exposed. It must be a free port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be logged on which port the Neo4j container is reachable over bolt.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_BOLT_PORT+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_BOLT_PORT+++`
+endif::add-copy-button-to-env-var[]
 --|int 
 |
 
@@ -49,7 +64,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 --
 This value can be used to specify the port to which the http-port of the container is exposed. It must be a free port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be logged on which port the Neo4j Browser is available.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_HTTP_PORT+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_HTTP_PORT+++`
+endif::add-copy-button-to-env-var[]
 --|int 
 |
 
@@ -60,7 +80,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services
 --
 Additional environment entries that can be added to the container before its start.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_ADDITIONAL_ENV+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_ADDITIONAL_ENV+++`
+endif::add-copy-button-to-env-var[]
 --|`Map<String,String>` 
 |
 

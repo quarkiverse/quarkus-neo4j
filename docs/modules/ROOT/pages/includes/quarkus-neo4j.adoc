@@ -16,7 +16,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus.neo4j.health.enab
 --
 Whether a health check is published in case the smallrye-health extension is present.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_HEALTH_ENABLED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_HEALTH_ENABLED+++`
+endif::add-copy-button-to-env-var[]
 --|boolean 
 |`true`
 
@@ -27,7 +32,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus.neo4j.devservices
 --
 If DevServices has been explicitly enabled or disabled. DevServices is generally enabled by default, unless there is an existing configuration present. When DevServices is enabled Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_ENABLED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_ENABLED+++`
+endif::add-copy-button-to-env-var[]
 --|boolean 
 |
 
@@ -38,7 +48,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus.neo4j.devservices
 --
 The container image name to use, for container based DevServices providers.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_IMAGE_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_IMAGE_NAME+++`
+endif::add-copy-button-to-env-var[]
 --|string 
 |`neo4j:4.4`
 
@@ -49,7 +64,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus.neo4j.devservices
 --
 This value can be used to specify the port to which the bolt-port of the container is exposed. It must be a free port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be logged on which port the Neo4j container is reachable over bolt.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_BOLT_PORT+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_BOLT_PORT+++`
+endif::add-copy-button-to-env-var[]
 --|int 
 |
 
@@ -60,7 +80,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus.neo4j.devservices
 --
 This value can be used to specify the port to which the http-port of the container is exposed. It must be a free port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be logged on which port the Neo4j Browser is available.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_HTTP_PORT+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_HTTP_PORT+++`
+endif::add-copy-button-to-env-var[]
 --|int 
 |
 
@@ -71,7 +96,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.uri]]`link:#quarkus-neo4j_quarkus.neo4j.uri[qua
 --
 The uri this driver should connect to. The driver supports bolt, bolt{plus}routing or neo4j as schemes.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_URI+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_URI+++`
+endif::add-copy-button-to-env-var[]
 --|string 
 |`bolt://localhost:7687`
 
@@ -82,7 +112,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.encrypted]]`link:#quarkus-neo4j_quarkus.neo4j.e
 --
 If the driver should use encrypted traffic.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_ENCRYPTED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_ENCRYPTED+++`
+endif::add-copy-button-to-env-var[]
 --|boolean 
 |`false`
 
@@ -93,7 +128,12 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus.neo4j.devservices
 --
 Additional environment entries that can be added to the container before its start.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_ADDITIONAL_ENV+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_ADDITIONAL_ENV+++`
+endif::add-copy-button-to-env-var[]
 --|`Map<String,String>` 
 |
 
@@ -109,7 +149,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.authentication.username]]`link:#quarkus-neo4j_q
 --
 The login of the user connecting to the database.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_AUTHENTICATION_USERNAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_AUTHENTICATION_USERNAME+++`
+endif::add-copy-button-to-env-var[]
 --|string 
 |`neo4j`
 
@@ -120,7 +165,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.authentication.password]]`link:#quarkus-neo4j_q
 --
 The password of the user connecting to the database.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_AUTHENTICATION_PASSWORD+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_AUTHENTICATION_PASSWORD+++`
+endif::add-copy-button-to-env-var[]
 --|string 
 |`neo4j`
 
@@ -131,7 +181,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.authentication.disabled]]`link:#quarkus-neo4j_q
 --
 Set this to true to disable authentication.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_AUTHENTICATION_DISABLED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_AUTHENTICATION_DISABLED+++`
+endif::add-copy-button-to-env-var[]
 --|boolean 
 |`false`
 
@@ -147,7 +202,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.trust-settings.strategy]]`link:#quarkus-neo4j_q
 --
 Configures which trust strategy to apply when using encrypted traffic.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_TRUST_SETTINGS_STRATEGY+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_TRUST_SETTINGS_STRATEGY+++`
+endif::add-copy-button-to-env-var[]
 -- a|
 `trust-all-certificates`, `trust-custom-ca-signed-certificates`, `trust-system-ca-signed-certificates` 
 |`trust-system-ca-signed-certificates`
@@ -159,7 +219,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.trust-settings.cert-file]]`link:#quarkus-neo4j_
 --
 The file of the certificate to use.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_TRUST_SETTINGS_CERT_FILE+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_TRUST_SETTINGS_CERT_FILE+++`
+endif::add-copy-button-to-env-var[]
 --|path 
 |
 
@@ -170,7 +235,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.trust-settings.hostname-verification-enabled]]`
 --
 If hostname verification is used.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_TRUST_SETTINGS_HOSTNAME_VERIFICATION_ENABLED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_TRUST_SETTINGS_HOSTNAME_VERIFICATION_ENABLED+++`
+endif::add-copy-button-to-env-var[]
 --|boolean 
 |`false`
 
@@ -186,7 +256,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.pool.metrics.enabled]]`link:#quarkus-neo4j_quar
 --
 Flag, if metrics are enabled.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_POOL_METRICS_ENABLED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_POOL_METRICS_ENABLED+++`
+endif::add-copy-button-to-env-var[]
 --|boolean 
 |`false`
 
@@ -197,7 +272,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.pool.log-leaked-sessions]]`link:#quarkus-neo4j_
 --
 Flag, if leaked sessions logging is enabled.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_POOL_LOG_LEAKED_SESSIONS+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_POOL_LOG_LEAKED_SESSIONS+++`
+endif::add-copy-button-to-env-var[]
 --|boolean 
 |`false`
 
@@ -208,7 +288,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.pool.max-connection-pool-size]]`link:#quarkus-n
 --
 The maximum amount of connections in the connection pool towards a single database.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_POOL_MAX_CONNECTION_POOL_SIZE+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_POOL_MAX_CONNECTION_POOL_SIZE+++`
+endif::add-copy-button-to-env-var[]
 --|int 
 |`100`
 
@@ -219,7 +304,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.pool.idle-time-before-connection-test]]`link:#q
 --
 Pooled connections that have been idle in the pool for longer than this timeout will be tested before they are used again. The value `0` means connections will always be tested for validity and negative values mean connections will never be tested.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_POOL_IDLE_TIME_BEFORE_CONNECTION_TEST+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_POOL_IDLE_TIME_BEFORE_CONNECTION_TEST+++`
+endif::add-copy-button-to-env-var[]
 --|link:https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html[Duration]
   link:#duration-note-anchor-{summaryTableId}[icon:question-circle[], title=More information about the Duration format]
 |`-0.001S`
@@ -231,7 +321,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.pool.max-connection-lifetime]]`link:#quarkus-ne
 --
 Pooled connections older than this threshold will be closed and removed from the pool.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_POOL_MAX_CONNECTION_LIFETIME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_POOL_MAX_CONNECTION_LIFETIME+++`
+endif::add-copy-button-to-env-var[]
 --|link:https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html[Duration]
   link:#duration-note-anchor-{summaryTableId}[icon:question-circle[], title=More information about the Duration format]
 |`1H`
@@ -243,7 +338,12 @@ a| [[quarkus-neo4j_quarkus.neo4j.pool.connection-acquisition-timeout]]`link:#qua
 --
 Acquisition of new connections will be attempted for at most configured timeout.
 
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_POOL_CONNECTION_ACQUISITION_TIMEOUT+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_POOL_CONNECTION_ACQUISITION_TIMEOUT+++`
+endif::add-copy-button-to-env-var[]
 --|link:https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html[Duration]
   link:#duration-note-anchor-{summaryTableId}[icon:question-circle[], title=More information about the Duration format]
 |`1M`

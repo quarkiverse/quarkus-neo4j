@@ -42,7 +42,7 @@ public class Neo4jFunctionalityTest {
 
     static Driver driver;
 
-    private Long apfelId;
+    private String apfelId;
 
     @BeforeAll
     public static void connectDriver() throws IOException {
@@ -74,8 +74,8 @@ public class Neo4jFunctionalityTest {
         try (var session = driver.session()) {
 
             session.run("MATCH (f:Fruit) DETACH DELETE f").consume();
-            apfelId = session.run("MERGE (f:Fruit {name: 'Apfel'}) RETURN id(f)")
-                    .single().get(0).asLong();
+            apfelId = session.run("MERGE (f:Fruit {name: 'Apfel'}) ON CREATE SET f.id = randomUUID() RETURN f.id")
+                    .single().get(0).asString();
         }
     }
 
@@ -87,7 +87,7 @@ public class Neo4jFunctionalityTest {
                 .then().statusCode(Status.OK.getStatusCode())
                 .extract().jsonPath();
 
-        assertEquals(apfelId, response.getLong("[0].id"));
+        assertEquals(apfelId, response.getString("[0].id"));
         assertEquals("Apfel", response.getString("[0].name"));
     }
 
@@ -109,7 +109,7 @@ public class Neo4jFunctionalityTest {
                 .body(new Fruit("Kartoffel"))
                 .when().post("/fruits/")
                 .then().statusCode(Status.CREATED.getStatusCode())
-                .header("Location", matchesRegex("(?:https?://.+)?/fruits/\\d+"));
+                .header("Location", matchesRegex("(?:https?://.+)?/fruits/[a-f\\d]{8}(?:-[a-f\\d]{4}){4}[a-f\\d]{8}"));
     }
 
     @Test
@@ -121,7 +121,7 @@ public class Neo4jFunctionalityTest {
                 .when().post("/reactivefruits/")
                 .prettyPeek()
                 .then().statusCode(Status.CREATED.getStatusCode())
-                .body(matchesRegex("/fruits/\\d+"));
+                .body(matchesRegex("/fruits/[a-f\\d]{8}(?:-[a-f\\d]{4}){4}[a-f\\d]{8}"));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class Neo4jFunctionalityTest {
                 .then().statusCode(Status.OK.getStatusCode())
                 .extract().jsonPath();
 
-        assertEquals(apfelId, response.getLong("id"));
+        assertEquals(apfelId, response.getString("id"));
         assertEquals("Apfel", response.getString("name"));
     }
 

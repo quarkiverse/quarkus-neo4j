@@ -69,4 +69,19 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>fast</id>
+            <activation>
+                <property>
+                    <name>fastDeploymentBuild</name>
+                </property>
+            </activation>
+            <properties>
+                <skipITs>true</skipITs>
+                <skipTests>true</skipTests>
+            </properties>
+        </profile>
+    </profiles>
 </project>

@@ -27,7 +27,7 @@
         <quarkus.version>2.14.2.Final</quarkus.version>
         <assertj.version>3.23.1</assertj.version>
 
-        <neo4j-java-driver.version>4.4.9</neo4j-java-driver.version>
+        <neo4j-java-driver.version>4.4.11</neo4j-java-driver.version>
     </properties>
     <dependencyManagement>
         <dependencies>

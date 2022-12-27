@@ -30,7 +30,7 @@ public class Neo4jDevModeTests {
         static QuarkusUnitTest test = new QuarkusUnitTest()
                 .withEmptyApplication()
                 .withConfigurationResource("application.properties")
-                .overrideConfigKey("quarkus.neo4j.devservices.additional-env.NEO4JLABS_PLUGINS", "[\"apoc\"]")
+                .overrideConfigKey("quarkus.neo4j.devservices.additional-env.NEO4JLABS_PLUGINS", "[\"apoc-core\"]")
                 .setLogRecordPredicate(record -> true)
                 .assertLogRecords(records -> assertThat(records).extracting(LogRecord::getMessage)
                         .contains("Dev Services started a Neo4j container reachable at %s"));

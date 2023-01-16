@@ -1,12 +1,11 @@
 package io.quarkus.it.neo4j;
 
 import static javax.ws.rs.core.MediaType.*;
-import static reactor.adapter.JdkFlowAdapter.flowPublisherToFlux;
-import static reactor.adapter.JdkFlowAdapter.publisherToFlowPublisher;
+import static org.reactivestreams.FlowAdapters.toFlowPublisher;
+import static org.reactivestreams.FlowAdapters.toPublisher;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
@@ -22,9 +21,11 @@ import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
 import org.neo4j.driver.Values;
 import org.neo4j.driver.async.AsyncSession;
+import org.neo4j.driver.reactive.ReactiveSession;
 import org.reactivestreams.Publisher;
 
-import reactor.core.publisher.Flux;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 
 @Path("/neo4j")
 public class Neo4jResource {
@@ -57,7 +58,7 @@ public class Neo4jResource {
     @Path("/asynchronous")
     @Produces(APPLICATION_JSON)
     public CompletionStage<List<Integer>> doStuffWithNeo4jAsynchronous() {
-        AsyncSession session = driver.asyncSession();
+        AsyncSession session = driver.session(AsyncSession.class);
         return threadContext.withContextCapture(session
                 .runAsync("UNWIND range(1, 3) AS x RETURN x"))
                 .thenCompose(cursor -> cursor.listAsync(record -> record.get("x").asInt()))
@@ -77,13 +78,17 @@ public class Neo4jResource {
     @Produces(SERVER_SENT_EVENTS)
     public Publisher<Integer> doStuffWithNeo4jReactive() {
 
-        return Flux.usingWhen(Flux.defer(() -> Flux.just(driver.reactiveSession())),
-                session -> flowPublisherToFlux(session.executeRead(tx -> {
-                    var result = flowPublisherToFlux(tx.run("UNWIND range(1, 3) AS x RETURN x", Collections.emptyMap()));
-                    return publisherToFlowPublisher(result
-                            .flatMap(v -> flowPublisherToFlux(v.records()))
-                            .map(record -> record.get("x").asInt()));
-                })), session -> flowPublisherToFlux(session.close())).doOnNext(System.out::println);
+        return Multi.createFrom().resource(() -> driver.session(ReactiveSession.class),
+                session -> toPublisher(session.executeRead(tx -> {
+                    var result = tx.run("UNWIND range(1, 3) AS x RETURN x");
+                    return toFlowPublisher(
+                            Multi.createFrom().publisher(toPublisher(result))
+                                    .flatMap(v -> toPublisher(v.records()))
+                                    .map(record -> record.get("x").asInt()));
+                })))
+                .withFinalizer(session -> {
+                    return Uni.createFrom().publisher(toPublisher(session.close()));
+                });
     }
 
     private static void createNodes(Driver driver) {

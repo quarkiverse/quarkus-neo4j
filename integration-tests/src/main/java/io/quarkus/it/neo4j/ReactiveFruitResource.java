@@ -37,7 +37,7 @@ public class ReactiveFruitResource {
     @Produces(MediaType.SERVER_SENT_EVENTS)
     public Publisher<String> get() {
         // Create a stream from a resource we can close in a finalizer...
-        return Multi.createFrom().resource(driver::reactiveSession, // <.>
+        return Multi.createFrom().resource(() -> driver.session(ReactiveSession.class), // <.>
                 session -> toPublisher(session.executeRead(tx -> {
                     var result = tx.run("MATCH (f:Fruit) RETURN f.name as name ORDER BY f.name");
                     return toFlowPublisher(
@@ -54,7 +54,7 @@ public class ReactiveFruitResource {
     @ResponseStatus(201)
     public Uni<String> create(Fruit fruit) {
 
-        return Uni.createFrom().emitter(e -> Multi.createFrom().resource(driver::reactiveSession, // <.>
+        return Uni.createFrom().emitter(e -> Multi.createFrom().resource(() -> driver.session(ReactiveSession.class), // <.>
                 session -> toPublisher(session.executeWrite(tx -> {
                     var result = tx.run(
                             "CREATE (f:Fruit {id: randomUUID(), name: $name}) RETURN f",

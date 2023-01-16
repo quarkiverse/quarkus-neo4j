@@ -16,18 +16,6 @@
         <neo4j.password>secret</neo4j.password>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-bom</artifactId>
-                <version>2022.0.1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
 
         <dependency>
@@ -49,12 +37,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-metrics-deployment</artifactId>
-        </dependency>
-
-        <!-- Project reactor makes it easier to deal with reactive streams -->
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
         </dependency>
 
         <!-- test dependencies -->

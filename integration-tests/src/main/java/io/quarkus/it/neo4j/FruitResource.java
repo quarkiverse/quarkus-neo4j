@@ -40,7 +40,7 @@ public class FruitResource {
     // tag::reading[]
     @GET
     public CompletionStage<Response> get() {
-        AsyncSession session = driver.asyncSession(); // <.>
+        AsyncSession session = driver.session(AsyncSession.class); // <.>
         CompletionStage<List<Fruit>> cs = session
                 .executeReadAsync(tx -> tx
                         .runAsync("MATCH (f:Fruit) RETURN f ORDER BY f.name") // <.>
@@ -57,7 +57,7 @@ public class FruitResource {
     // tag::create[]
     @POST
     public CompletionStage<Response> create(Fruit fruit) {
-        AsyncSession session = driver.asyncSession();
+        AsyncSession session = driver.session(AsyncSession.class);
         CompletionStage<Fruit> cs = session
                 .executeWriteAsync(tx -> tx
                         .runAsync(
@@ -78,7 +78,7 @@ public class FruitResource {
     @GET
     @Path("/{id}")
     public CompletionStage<Response> getSingle(String id) {
-        AsyncSession session = driver.asyncSession();
+        AsyncSession session = driver.session(AsyncSession.class);
         return threadContext.withContextCapture(session
                 .executeReadAsync(tx -> tx
                         .runAsync("MATCH (f:Fruit) WHERE f.id = $id RETURN f", Map.of("id", id))
@@ -106,7 +106,7 @@ public class FruitResource {
     @DELETE
     @Path("{id}")
     public CompletionStage<Response> delete(String id) {
-        AsyncSession session = driver.asyncSession();
+        AsyncSession session = driver.session(AsyncSession.class);
         return threadContext.withContextCapture(session
                 .executeWriteAsync(tx -> tx
                         .runAsync("MATCH (f:Fruit) WHERE f.id = $id DELETE f", Map.of("id", id))

@@ -1,18 +1,17 @@
 package io.quarkus.it.neo4j;
 
-import static javax.ws.rs.core.MediaType.*;
-import static org.reactivestreams.FlowAdapters.toFlowPublisher;
-import static org.reactivestreams.FlowAdapters.toPublisher;
+import static jakarta.ws.rs.core.MediaType.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Flow;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 
 import org.eclipse.microprofile.context.ThreadContext;
 import org.neo4j.driver.Driver;
@@ -21,8 +20,8 @@ import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
 import org.neo4j.driver.Values;
 import org.neo4j.driver.async.AsyncSession;
+import org.neo4j.driver.reactive.ReactiveResult;
 import org.neo4j.driver.reactive.ReactiveSession;
-import org.reactivestreams.Publisher;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -76,18 +75,17 @@ public class Neo4jResource {
     @GET
     @Path("/reactive")
     @Produces(SERVER_SENT_EVENTS)
-    public Publisher<Integer> doStuffWithNeo4jReactive() {
+    public Flow.Publisher<Integer> doStuffWithNeo4jReactive() {
 
         return Multi.createFrom().resource(() -> driver.session(ReactiveSession.class),
-                session -> toPublisher(session.executeRead(tx -> {
+                session -> session.executeRead(tx -> {
                     var result = tx.run("UNWIND range(1, 3) AS x RETURN x");
-                    return toFlowPublisher(
-                            Multi.createFrom().publisher(toPublisher(result))
-                                    .flatMap(v -> toPublisher(v.records()))
-                                    .map(record -> record.get("x").asInt()));
-                })))
+                    return Multi.createFrom().publisher(result)
+                            .flatMap(ReactiveResult::records)
+                            .map(record -> record.get("x").asInt());
+                }))
                 .withFinalizer(session -> {
-                    return Uni.createFrom().publisher(toPublisher(session.close()));
+                    return Uni.createFrom().publisher(session.close());
                 });
     }
 

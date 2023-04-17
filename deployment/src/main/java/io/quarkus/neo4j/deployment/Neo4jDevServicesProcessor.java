@@ -35,7 +35,7 @@ class Neo4jDevServicesProcessor {
     private static final Logger log = Logger.getLogger("io.quarkus.neo4j.deployment");
 
     private static final String NEO4J_URI = "quarkus.neo4j.uri";
-    private static final String NEO4J_BROWSER_URL = "quarkus.neo4j.browser-url";
+    static final String NEO4J_BROWSER_URL = "quarkus.neo4j.browser-url";
     private static final String NEO4J_USER_PROP = "quarkus.neo4j.authentication.username";
     private static final String NEO4J_PASSWORD_PROP = "quarkus.neo4j.authentication.password";
 
@@ -203,7 +203,7 @@ class Neo4jDevServicesProcessor {
         final OptionalInt fixedHttpPort;
 
         Neo4jDevServiceConfig(DevServicesBuildTimeConfig devServicesConfig) {
-            this.devServicesEnabled = devServicesConfig.enabled.orElse(true);
+            this.devServicesEnabled = enabled(devServicesConfig);
             this.imageName = devServicesConfig.imageName;
             this.additionalEnv = new HashMap<>(devServicesConfig.additionalEnv);
             this.fixedBoltPort = devServicesConfig.boltPort;
@@ -230,5 +230,15 @@ class Neo4jDevServicesProcessor {
         public int hashCode() {
             return Objects.hash(devServicesEnabled, imageName, additionalEnv, fixedBoltPort, fixedHttpPort);
         }
+    }
+
+    /**
+     * A helper method to encapsulate the {@code Optional<Boolean>} to {code boolean} mapping of that config flag.
+     *
+     * @param devServicesConfig The configuration of dev services for neo4j
+     * @return {@literal true} if Neo4j dev services are enabled or not
+     */
+    static boolean enabled(DevServicesBuildTimeConfig devServicesConfig) {
+        return Optional.ofNullable(devServicesConfig).flatMap(cfg -> cfg.enabled).orElse(true);
     }
 }

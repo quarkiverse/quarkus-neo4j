@@ -8,7 +8,7 @@
     </parent>
     <groupId>io.quarkiverse.neo4j</groupId>
     <artifactId>quarkus-neo4j-parent</artifactId>
-    <version>2.2.8-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Quarkus - Neo4j - Parent</name>
     <modules>
@@ -24,7 +24,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus.version>2.16.6.Final</quarkus.version>
+        <quarkus.version>3.0.0.Final</quarkus.version>
         <assertj.version>3.24.2</assertj.version>
 
         <neo4j-java-driver.version>5.7.0</neo4j-java-driver.version>

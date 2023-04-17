@@ -10,7 +10,7 @@ import java.net.ServerSocket;
 import java.util.function.Predicate;
 import java.util.logging.LogRecord;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;

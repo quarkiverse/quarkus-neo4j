@@ -14,7 +14,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response.Status;
 
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterAll;

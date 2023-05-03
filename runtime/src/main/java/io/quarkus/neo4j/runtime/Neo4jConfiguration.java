@@ -47,6 +47,12 @@ public class Neo4jConfiguration {
     public TrustSettings trustSettings;
 
     /**
+     * Configure the maximum time transactions are allowed to retry.
+     */
+    @ConfigItem(defaultValue = "30S")
+    public Duration maxTransactionRetryTime;
+
+    /**
      * Connection pool.
      */
     @ConfigItem

@@ -5,6 +5,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import java.net.URI;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -43,6 +44,7 @@ public class Neo4jDriverRecorder {
         Config.ConfigBuilder configBuilder = createBaseConfig();
         configureSsl(configBuilder, configuration);
         configurePoolSettings(configBuilder, configuration.pool);
+        configBuilder.withMaxTransactionRetryTime(configuration.maxTransactionRetryTime.toMillis(), TimeUnit.MILLISECONDS);
 
         Driver driver = GraphDatabase.driver(uri, authToken, configBuilder.build());
         shutdownContext.addShutdownTask(driver::close);

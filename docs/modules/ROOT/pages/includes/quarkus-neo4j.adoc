@@ -122,6 +122,23 @@ endif::add-copy-button-to-env-var[]
 |`false`
 
 
+a| [[quarkus-neo4j_quarkus.neo4j.max-transaction-retry-time]]`link:#quarkus-neo4j_quarkus.neo4j.max-transaction-retry-time[quarkus.neo4j.max-transaction-retry-time]`
+
+[.description]
+--
+Configure the maximum time transactions are allowed to retry.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_MAX_TRANSACTION_RETRY_TIME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_NEO4J_MAX_TRANSACTION_RETRY_TIME+++`
+endif::add-copy-button-to-env-var[]
+--|link:https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html[Duration]
+  link:#duration-note-anchor-{summaryTableId}[icon:question-circle[], title=More information about the Duration format]
+|`30S`
+
+
 a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus.neo4j.devservices.additional-env-additional-env]]`link:#quarkus-neo4j_quarkus.neo4j.devservices.additional-env-additional-env[quarkus.neo4j.devservices.additional-env]`
 
 [.description]

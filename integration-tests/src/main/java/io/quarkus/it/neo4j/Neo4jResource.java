@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.Flow;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -75,7 +74,7 @@ public class Neo4jResource {
     @GET
     @Path("/reactive")
     @Produces(SERVER_SENT_EVENTS)
-    public Flow.Publisher<Integer> doStuffWithNeo4jReactive() {
+    public Multi<Integer> doStuffWithNeo4jReactive() {
 
         return Multi.createFrom().resource(() -> driver.session(ReactiveSession.class),
                 session -> session.executeRead(tx -> {

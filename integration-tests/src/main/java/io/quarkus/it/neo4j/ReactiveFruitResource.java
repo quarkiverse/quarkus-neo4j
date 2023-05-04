@@ -2,7 +2,6 @@
 package io.quarkus.it.neo4j;
 
 import java.util.Map;
-import java.util.concurrent.Flow;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -33,7 +32,7 @@ public class ReactiveFruitResource {
 
     @GET
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Flow.Publisher<String> get() {
+    public Multi<String> get() {
         // Create a stream from a resource we can close in a finalizer...
         return Multi.createFrom().resource(() -> driver.session(ReactiveSession.class), // <.>
                 session -> session.executeRead(tx -> {
@@ -60,6 +59,7 @@ public class ReactiveFruitResource {
                 }))
                 .withFinalizer(ReactiveFruitResource::sessionFinalizer)
                 .map(record -> Fruit.from(record.get("f").asNode()))
+                .toUni()
                 .subscribe().with( // <.>
                         persistedFruit -> e.complete("/fruits/" + persistedFruit.id)));
     }

@@ -36,10 +36,7 @@ public class Neo4jDriverRecorder {
     public RuntimeValue<Driver> initializeDriver(Neo4jConfiguration configuration, ShutdownContext shutdownContext) {
 
         String uri = configuration.uri;
-        AuthToken authToken = AuthTokens.none();
-        if (!configuration.authentication.disabled) {
-            authToken = AuthTokens.basic(configuration.authentication.username, configuration.authentication.password);
-        }
+        AuthToken authToken = getAuthToken(configuration);
 
         Config.ConfigBuilder configBuilder = createBaseConfig();
         configureSsl(configBuilder, configuration);
@@ -49,6 +46,27 @@ public class Neo4jDriverRecorder {
         Driver driver = GraphDatabase.driver(uri, authToken, configBuilder.build());
         shutdownContext.addShutdownTask(driver::close);
         return new RuntimeValue<>(driver);
+    }
+
+    static AuthToken getAuthToken(Neo4jConfiguration configuration) {
+        if (configuration.authentication.disabled) {
+            return AuthTokens.none();
+        }
+        return configuration.authentication.value
+                .map(Neo4jDriverRecorder::toAuthToken)
+                .orElseGet(
+                        () -> AuthTokens.basic(configuration.authentication.username, configuration.authentication.password));
+    }
+
+    static AuthToken toAuthToken(String value) {
+
+        var idx = value.indexOf("/");
+        if (idx < 1 || idx == value.length() - 1) {
+            throw new IllegalArgumentException(
+                    "Invalid value for NEO4J_AUTH, the only supported format is <username>/<password>, neither username nor password are optional");
+        }
+
+        return AuthTokens.basic(value.substring(0, idx), value.substring(idx + 1));
     }
 
     public Consumer<MetricsFactory> registerMetrics(Neo4jConfiguration configuration) {

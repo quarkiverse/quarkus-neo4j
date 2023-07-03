@@ -79,6 +79,14 @@ public class Neo4jConfiguration {
          */
         @ConfigItem
         public boolean disabled;
+
+        /**
+         * An optional field that when is not empty has precedence over {@link #username} and {@link #password}. It behaves
+         * the same way as {@literal NEO4J_AUTH} in the official docker image, containing both the username and password
+         * separated via a single forward slash ({@code /}).
+         */
+        @ConfigItem
+        public Optional<String> value;
     }
 
     @ConfigGroup

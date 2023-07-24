@@ -30,7 +30,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.2.0.Final</quarkus.version>
+    <quarkus.version>3.2.2.Final</quarkus.version>
     <assertj.version>3.24.2</assertj.version>
     <neo4j-java-driver.version>5.10.0</neo4j-java-driver.version>
   </properties>

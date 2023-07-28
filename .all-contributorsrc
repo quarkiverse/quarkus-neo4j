@@ -51,6 +51,15 @@
       "contributions": [
         "infra"
       ]
+    },
+    {
+      "login": "TheJavaGuy",
+      "name": "Ivan Milosavljević",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11942401?v=4",
+      "profile": "https://thejavaguy.org/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -58,5 +67,7 @@
   "projectOwner": "quarkiverse",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitType": "docs",
+  "commitConvention": "angular"
 }

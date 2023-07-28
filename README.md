@@ -1,6 +1,6 @@
 # Quarkus Neo4j
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.neo4j/quarkus-neo4j?logo=apache-maven&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.neo4j/quarkus-neo4j)
@@ -30,11 +30,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tbody>
     <tr>
-      <td align="center"><a href="http://michael-simons.eu"><img src="https://avatars.githubusercontent.com/u/526383?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Michael Simons</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=michael-simons" title="Code">💻</a> <a href="#maintenance-michael-simons" title="Maintenance">🚧</a></td>
-      <td align="center"><a href="https://lesincroyableslivres.fr/"><img src="https://avatars.githubusercontent.com/u/1279749?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Guillaume Smet</b></sub></a><br /><a href="#maintenance-gsmet" title="Maintenance">🚧</a> <a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=gsmet" title="Documentation">📖</a></td>
-      <td align="center"><a href="http://www.phillip-kruger.com"><img src="https://avatars.githubusercontent.com/u/6836179?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Phillip Krüger</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=phillip-kruger" title="Code">💻</a></td>
-      <td align="center"><a href="https://github.com/cescoffier"><img src="https://avatars.githubusercontent.com/u/402301?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Clement Escoffier</b></sub></a><br /><a href="#question-cescoffier" title="Answering Questions">💬</a></td>
-      <td align="center"><a href="http://gastaldi.wordpress.com"><img src="https://avatars.githubusercontent.com/u/54133?v=4?s=100" width="100px;" alt=""/><br /><sub><b>George Gastaldi</b></sub></a><br /><a href="#infra-gastaldi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://michael-simons.eu"><img src="https://avatars.githubusercontent.com/u/526383?v=4?s=100" width="100px;" alt="Michael Simons"/><br /><sub><b>Michael Simons</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=michael-simons" title="Code">💻</a> <a href="#maintenance-michael-simons" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://lesincroyableslivres.fr/"><img src="https://avatars.githubusercontent.com/u/1279749?v=4?s=100" width="100px;" alt="Guillaume Smet"/><br /><sub><b>Guillaume Smet</b></sub></a><br /><a href="#maintenance-gsmet" title="Maintenance">🚧</a> <a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=gsmet" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.phillip-kruger.com"><img src="https://avatars.githubusercontent.com/u/6836179?v=4?s=100" width="100px;" alt="Phillip Krüger"/><br /><sub><b>Phillip Krüger</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=phillip-kruger" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/cescoffier"><img src="https://avatars.githubusercontent.com/u/402301?v=4?s=100" width="100px;" alt="Clement Escoffier"/><br /><sub><b>Clement Escoffier</b></sub></a><br /><a href="#question-cescoffier" title="Answering Questions">💬</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://gastaldi.wordpress.com"><img src="https://avatars.githubusercontent.com/u/54133?v=4?s=100" width="100px;" alt="George Gastaldi"/><br /><sub><b>George Gastaldi</b></sub></a><br /><a href="#infra-gastaldi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://thejavaguy.org/"><img src="https://avatars.githubusercontent.com/u/11942401?v=4?s=100" width="100px;" alt="Ivan Milosavljević"/><br /><sub><b>Ivan Milosavljević</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=TheJavaGuy" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>

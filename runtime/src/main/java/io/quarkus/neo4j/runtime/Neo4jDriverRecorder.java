@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
-import org.graalvm.nativeimage.ImageInfo;
 import org.jboss.logging.Logger;
 import org.neo4j.driver.AuthToken;
 import org.neo4j.driver.AuthTokens;
@@ -21,6 +20,7 @@ import org.neo4j.driver.Logging;
 import org.neo4j.driver.internal.Scheme;
 
 import io.quarkus.arc.Arc;
+import io.quarkus.bootstrap.graal.ImageInfo;
 import io.quarkus.runtime.RuntimeValue;
 import io.quarkus.runtime.ShutdownContext;
 import io.quarkus.runtime.annotations.Recorder;

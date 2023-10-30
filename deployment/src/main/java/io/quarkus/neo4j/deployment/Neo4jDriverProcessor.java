@@ -91,5 +91,8 @@ class Neo4jDriverProcessor {
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.util.AbstractReferenceCounted"));
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.util.internal.logging.Log4JLogger"));
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.internal.tcnative.SSL"));
+
+        // See https://github.com/quarkiverse/quarkus-neo4j/pull/208#issuecomment-1784849182
+        classes.produce(new RuntimeInitializedClassBuildItem("io.vertx.core.net.impl.SSLHelper"));
     }
 }

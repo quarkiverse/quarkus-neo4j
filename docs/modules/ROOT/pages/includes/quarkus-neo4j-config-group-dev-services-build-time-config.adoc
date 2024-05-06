@@ -10,7 +10,8 @@ h|[[quarkus-neo4j-config-group-dev-services-build-time-config_configuration]]lin
 h|Type
 h|Default
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.enabled]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.enabled[quarkus.neo4j.devservices.enabled]`
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-enabled]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-enabled[quarkus.neo4j.devservices.enabled]`
+
 
 [.description]
 --
@@ -26,7 +27,8 @@ endif::add-copy-button-to-env-var[]
 |
 
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.image-name]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.image-name[quarkus.neo4j.devservices.image-name]`
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-image-name]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-image-name[quarkus.neo4j.devservices.image-name]`
+
 
 [.description]
 --
@@ -42,7 +44,8 @@ endif::add-copy-button-to-env-var[]
 |`neo4j:4.4`
 
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.bolt-port]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.bolt-port[quarkus.neo4j.devservices.bolt-port]`
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-bolt-port]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-bolt-port[quarkus.neo4j.devservices.bolt-port]`
+
 
 [.description]
 --
@@ -58,7 +61,8 @@ endif::add-copy-button-to-env-var[]
 |
 
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.http-port]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.http-port[quarkus.neo4j.devservices.http-port]`
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-http-port]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-http-port[quarkus.neo4j.devservices.http-port]`
+
 
 [.description]
 --
@@ -74,7 +78,8 @@ endif::add-copy-button-to-env-var[]
 |
 
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.additional-env-additional-env]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus.neo4j.devservices.additional-env-additional-env[quarkus.neo4j.devservices.additional-env]`
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-additional-env-additional-env]]`link:#quarkus-neo4j-config-group-dev-services-build-time-config_quarkus-neo4j-devservices-additional-env-additional-env[quarkus.neo4j.devservices.additional-env]`
+
 
 [.description]
 --

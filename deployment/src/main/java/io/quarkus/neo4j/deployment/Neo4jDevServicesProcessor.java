@@ -20,12 +20,14 @@ import io.quarkus.deployment.Feature;
 import io.quarkus.deployment.IsDockerWorking;
 import io.quarkus.deployment.IsNormal;
 import io.quarkus.deployment.annotations.BuildStep;
+import io.quarkus.deployment.annotations.Consume;
 import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.console.ConsoleInstalledBuildItem;
 import io.quarkus.deployment.console.StartupLogCompressor;
+import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
 import io.quarkus.deployment.logging.LoggingSetupBuildItem;
 import io.quarkus.runtime.configuration.ConfigUtils;
@@ -104,6 +106,13 @@ class Neo4jDevServicesProcessor {
         runningConfiguration = configuration;
 
         return devService == null ? null : devService.toBuildItem();
+    }
+
+    @BuildStep(onlyIfNot = IsNormal.class, onlyIf = GlobalDevServicesConfig.Enabled.class)
+    @Consume(DevServicesResultBuildItem.class)
+    DevServiceDescriptionBuildItem renderDevServiceDevUICard() {
+        return devService == null ? null
+                : new DevServiceDescriptionBuildItem(Feature.NEO4J.getName(), null, devService.getConfig());
     }
 
     private ExtNeo4jContainer startNeo4j(Neo4jDevServiceConfig configuration, Optional<Duration> timeout) {

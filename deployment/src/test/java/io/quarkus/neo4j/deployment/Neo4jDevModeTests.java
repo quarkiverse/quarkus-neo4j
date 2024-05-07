@@ -30,7 +30,7 @@ public class Neo4jDevModeTests {
         static QuarkusUnitTest test = new QuarkusUnitTest()
                 .withEmptyApplication()
                 .withConfigurationResource("application.properties")
-                .overrideConfigKey("quarkus.neo4j.devservices.additional-env.NEO4JLABS_PLUGINS", "[\"apoc-core\"]")
+                .overrideConfigKey("quarkus.neo4j.devservices.additional-env.NEO4J_PLUGINS", "[\"apoc\"]")
                 .setLogRecordPredicate(record -> true)
                 .assertLogRecords(records -> assertThat(records).extracting(LogRecord::getMessage)
                         .contains("Dev Services started a Neo4j container reachable at %s"));
@@ -44,7 +44,7 @@ public class Neo4jDevModeTests {
             assertThatNoException().isThrownBy(() -> driver.verifyConnectivity());
             try (var session = driver.session()) {
                 var apoc = session.run("RETURN apoc.version() AS output").single().get(0).asString();
-                assertThat(apoc).isNotNull().startsWith("4.");
+                assertThat(apoc).isNotNull().startsWith("5.");
             }
         }
     }

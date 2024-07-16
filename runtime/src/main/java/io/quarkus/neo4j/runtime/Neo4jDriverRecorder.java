@@ -71,36 +71,35 @@ public class Neo4jDriverRecorder {
 
     public Consumer<MetricsFactory> registerMetrics(Neo4jConfiguration configuration) {
         if (configuration.pool != null && configuration.pool.metricsEnabled) {
-            return new Consumer<MetricsFactory>() {
-                @Override
-                public void accept(MetricsFactory metricsFactory) {
-                    // if the pool hasn't been used yet, the ConnectionPoolMetrics object doesn't exist, so use zeros instead
-                    metricsFactory.builder("neo4j.acquired").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::acquired).orElse(0L));
-                    metricsFactory.builder("neo4j.acquiring").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::acquiring).orElse(0));
-                    metricsFactory.builder("neo4j.closed").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::closed).orElse(0L));
-                    metricsFactory.builder("neo4j.created").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::created).orElse(0L));
-                    metricsFactory.builder("neo4j.creating").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::creating).orElse(0));
-                    metricsFactory.builder("neo4j.failedToCreate").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::failedToCreate).orElse(0L));
-                    metricsFactory.builder("neo4j.timedOutToAcquire").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::timedOutToAcquire).orElse(0L));
-                    metricsFactory.builder("neo4j.totalAcquisitionTime").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalAcquisitionTime).orElse(0L));
-                    metricsFactory.builder("neo4j.totalConnectionTime").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalConnectionTime).orElse(0L));
-                    metricsFactory.builder("neo4j.totalInUseCount").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
-                    metricsFactory.builder("neo4j.totalInUseTime").buildCounter(
-                            () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
-                }
+            return metricsFactory -> {
+                // if the pool hasn't been used yet, the ConnectionPoolMetrics object doesn't exist, so use zeros instead
+                metricsFactory.builder("neo4j.acquired").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::acquired).orElse(0L));
+                metricsFactory.builder("neo4j.acquiring").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::acquiring).orElse(0));
+                metricsFactory.builder("neo4j.closed").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::closed).orElse(0L));
+                metricsFactory.builder("neo4j.created").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::created).orElse(0L));
+                metricsFactory.builder("neo4j.creating").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::creating).orElse(0));
+                metricsFactory.builder("neo4j.failedToCreate").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::failedToCreate).orElse(0L));
+                metricsFactory.builder("neo4j.timedOutToAcquire").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::timedOutToAcquire).orElse(0L));
+                metricsFactory.builder("neo4j.totalAcquisitionTime").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalAcquisitionTime).orElse(0L));
+                metricsFactory.builder("neo4j.totalConnectionTime").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalConnectionTime).orElse(0L));
+                metricsFactory.builder("neo4j.totalInUseCount").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
+                metricsFactory.builder("neo4j.totalInUseTime").buildCounter(
+                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
             };
         } else {
-            return null;
+            return metricsFactory -> {
+
+            };
         }
     }
 

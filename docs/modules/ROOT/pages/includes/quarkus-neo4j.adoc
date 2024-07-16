@@ -58,7 +58,7 @@ ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_IMAGE_NAME+++`
 endif::add-copy-button-to-env-var[]
 --|string 
-|`neo4j:4.4`
+|`neo4j:5`
 
 
 a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-bolt-port]]`link:#quarkus-neo4j_quarkus-neo4j-devservices-bolt-port[quarkus.neo4j.devservices.bolt-port]`
@@ -147,7 +147,7 @@ endif::add-copy-button-to-env-var[]
 |`30S`
 
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env]]`link:#quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env[quarkus.neo4j.devservices.additional-env]`
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env]]`link:#quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env[quarkus.neo4j.devservices.additional-env."additional-env"]`
 
 
 [.description]
@@ -155,12 +155,13 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices
 Additional environment entries that can be added to the container before its start.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_ADDITIONAL_ENV+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_ADDITIONAL_ENV__ADDITIONAL_ENV_+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_ADDITIONAL_ENV+++`
+Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_ADDITIONAL_ENV__ADDITIONAL_ENV_+++`
 endif::add-copy-button-to-env-var[]
---|`Map<String,String>` 
+--|link:https://docs.oracle.com/javase/8/docs/api/java/lang/String.html[String]
+ 
 |
 
 

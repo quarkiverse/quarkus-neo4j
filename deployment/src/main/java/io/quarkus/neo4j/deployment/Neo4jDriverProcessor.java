@@ -1,7 +1,5 @@
 package io.quarkus.neo4j.deployment;
 
-import java.util.function.Consumer;
-
 import org.neo4j.driver.Driver;
 
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
@@ -19,7 +17,6 @@ import io.quarkus.deployment.metrics.MetricsFactoryConsumerBuildItem;
 import io.quarkus.neo4j.runtime.Neo4jConfiguration;
 import io.quarkus.neo4j.runtime.Neo4jDriverRecorder;
 import io.quarkus.runtime.RuntimeValue;
-import io.quarkus.runtime.metrics.MetricsFactory;
 import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
 
 class Neo4jDriverProcessor {
@@ -58,11 +55,7 @@ class Neo4jDriverProcessor {
     void metrics(Neo4jConfiguration configuration,
             Neo4jDriverRecorder recorder,
             BuildProducer<MetricsFactoryConsumerBuildItem> metrics) {
-        Consumer<MetricsFactory> metricsFactoryConsumer = recorder.registerMetrics(configuration);
-        // If metrics for neo4j are disabled, the returned consumer will be null,
-        // but in a processor we can't know that (it's controlled by a runtime config property)
-        // so the BuildItem might contain null and in that case will be ignored by the metrics recorder
-        metrics.produce(new MetricsFactoryConsumerBuildItem(metricsFactoryConsumer));
+        metrics.produce(new MetricsFactoryConsumerBuildItem(recorder.registerMetrics(configuration)));
     }
 
     @BuildStep

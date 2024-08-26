@@ -35,13 +35,13 @@ public class Neo4jDriverRecorder {
 
     public RuntimeValue<Driver> initializeDriver(Neo4jConfiguration configuration, ShutdownContext shutdownContext) {
 
-        String uri = configuration.uri;
+        String uri = configuration.uri();
         AuthToken authToken = getAuthToken(configuration);
 
         Config.ConfigBuilder configBuilder = createBaseConfig();
         configureSsl(configBuilder, configuration);
-        configurePoolSettings(configBuilder, configuration.pool);
-        configBuilder.withMaxTransactionRetryTime(configuration.maxTransactionRetryTime.toMillis(), TimeUnit.MILLISECONDS);
+        configurePoolSettings(configBuilder, configuration.pool());
+        configBuilder.withMaxTransactionRetryTime(configuration.maxTransactionRetryTime().toMillis(), TimeUnit.MILLISECONDS);
 
         Driver driver = GraphDatabase.driver(uri, authToken, configBuilder.build());
         shutdownContext.addShutdownTask(driver::close);
@@ -49,13 +49,14 @@ public class Neo4jDriverRecorder {
     }
 
     static AuthToken getAuthToken(Neo4jConfiguration configuration) {
-        if (configuration.authentication.disabled) {
+        if (configuration.authentication().disabled()) {
             return AuthTokens.none();
         }
-        return configuration.authentication.value
+        return configuration.authentication().value()
                 .map(Neo4jDriverRecorder::toAuthToken)
                 .orElseGet(
-                        () -> AuthTokens.basic(configuration.authentication.username, configuration.authentication.password));
+                        () -> AuthTokens.basic(configuration.authentication().username(),
+                                configuration.authentication().password()));
     }
 
     static AuthToken toAuthToken(String value) {
@@ -70,7 +71,7 @@ public class Neo4jDriverRecorder {
     }
 
     public Consumer<MetricsFactory> registerMetrics(Neo4jConfiguration configuration) {
-        if (configuration.pool != null && configuration.pool.metricsEnabled) {
+        if (configuration.pool() != null && configuration.pool().metricsEnabled()) {
             return metricsFactory -> {
                 // if the pool hasn't been used yet, the ConnectionPoolMetrics object doesn't exist, so use zeros instead
                 metricsFactory.builder("neo4j.acquired").buildCounter(
@@ -133,7 +134,7 @@ public class Neo4jDriverRecorder {
 
     private static void configureSsl(Config.ConfigBuilder configBuilder, Neo4jConfiguration configuration) {
 
-        var uri = URI.create(configuration.uri);
+        var uri = URI.create(configuration.uri());
         var scheme = uri.getScheme();
 
         boolean isSecurityScheme = Scheme.isSecurityScheme(scheme);
@@ -159,9 +160,9 @@ public class Neo4jDriverRecorder {
                     "Native SSL is disabled, communication between this client and the Neo4j server cannot be encrypted.");
             configBuilder.withoutEncryption();
         } else {
-            if (configuration.encrypted) {
+            if (configuration.encrypted()) {
                 configBuilder.withEncryption();
-                configBuilder.withTrustStrategy(configuration.trustSettings.toInternalRepresentation());
+                configBuilder.withTrustStrategy(configuration.trustSettings().toInternalRepresentation());
             } else {
                 configBuilder.withoutEncryption();
             }
@@ -174,16 +175,16 @@ public class Neo4jDriverRecorder {
             log.debug("Configuring Neo4j pool settings with " + pool);
         }
 
-        if (pool.logLeakedSessions) {
+        if (pool.logLeakedSessions()) {
             configBuilder.withLeakedSessionsLogging();
         }
 
-        configBuilder.withMaxConnectionPoolSize(pool.maxConnectionPoolSize);
-        configBuilder.withConnectionLivenessCheckTimeout(pool.idleTimeBeforeConnectionTest.toMillis(), MILLISECONDS);
-        configBuilder.withMaxConnectionLifetime(pool.maxConnectionLifetime.toMillis(), MILLISECONDS);
-        configBuilder.withConnectionAcquisitionTimeout(pool.connectionAcquisitionTimeout.toMillis(), MILLISECONDS);
+        configBuilder.withMaxConnectionPoolSize(pool.maxConnectionPoolSize());
+        configBuilder.withConnectionLivenessCheckTimeout(pool.idleTimeBeforeConnectionTest().toMillis(), MILLISECONDS);
+        configBuilder.withMaxConnectionLifetime(pool.maxConnectionLifetime().toMillis(), MILLISECONDS);
+        configBuilder.withConnectionAcquisitionTimeout(pool.connectionAcquisitionTimeout().toMillis(), MILLISECONDS);
 
-        if (pool.metricsEnabled) {
+        if (pool.metricsEnabled()) {
             configBuilder.withDriverMetrics();
         } else {
             configBuilder.withoutDriverMetrics();

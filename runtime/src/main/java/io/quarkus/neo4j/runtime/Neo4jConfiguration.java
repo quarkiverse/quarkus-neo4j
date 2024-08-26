@@ -9,90 +9,91 @@ import org.neo4j.driver.Config;
 
 import io.quarkus.runtime.annotations.ConfigDocSection;
 import io.quarkus.runtime.annotations.ConfigGroup;
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
+import io.smallrye.config.WithName;
 
+@ConfigMapping(prefix = "quarkus.neo4j")
 @ConfigRoot(phase = ConfigPhase.RUN_TIME)
-public class Neo4jConfiguration {
+public interface Neo4jConfiguration {
 
-    static final String DEFAULT_SERVER_URI = "bolt://localhost:7687";
-    static final String DEFAULT_USERNAME = "neo4j";
-    static final String DEFAULT_PASSWORD = "neo4j";
-
-    /**
-     * The uri this driver should connect to. The driver supports bolt, bolt+routing or neo4j as schemes.
-     */
-    @ConfigItem(defaultValue = DEFAULT_SERVER_URI)
-    public String uri;
+    String DEFAULT_SERVER_URI = "bolt://localhost:7687";
+    String DEFAULT_USERNAME = "neo4j";
+    String DEFAULT_PASSWORD = "neo4j";
 
     /**
-     * Authentication.
+     * {@return the uri this driver should connect to. The driver supports bolt, bolt+routing or neo4j as schemes}
      */
-    @ConfigItem
+    @WithDefault(DEFAULT_SERVER_URI)
+    String uri();
+
+    /**
+     * {@return the authentication}
+     */
     @ConfigDocSection
-    public Authentication authentication;
+    Authentication authentication();
 
     /**
-     * If the driver should use encrypted traffic.
+     * {@return if the driver should use encrypted traffic}
      */
-    @ConfigItem
-    public boolean encrypted;
+    @WithDefault("false")
+    boolean encrypted();
 
     /**
-     * Configure trust settings for encrypted traffic.
+     * {@return the trust settings for encrypted traffic}
      */
-    @ConfigItem
     @ConfigDocSection
-    public TrustSettings trustSettings;
+    TrustSettings trustSettings();
 
     /**
-     * Configure the maximum time transactions are allowed to retry.
+     * {@return the maximum time transactions are allowed to retry}
      */
-    @ConfigItem(defaultValue = "30S")
-    public Duration maxTransactionRetryTime;
+    @WithDefault("30S")
+    Duration maxTransactionRetryTime();
 
     /**
-     * Connection pool.
+     * {@return the connection pool}
      */
-    @ConfigItem
     @ConfigDocSection
-    public Pool pool;
+    Pool pool();
 
     @ConfigGroup
-    static class Authentication {
+    interface Authentication {
 
         /**
-         * The login of the user connecting to the database.
+         * {@return the login of the user connecting to the database}
          */
-        @ConfigItem(defaultValue = DEFAULT_USERNAME)
-        public String username;
+        @WithDefault(DEFAULT_USERNAME)
+        String username();
 
         /**
-         * The password of the user connecting to the database.
+         * {@return the password of the user connecting to the database}
          */
-        @ConfigItem(defaultValue = DEFAULT_PASSWORD)
-        public String password;
+        @WithDefault(DEFAULT_PASSWORD)
+        String password();
 
         /**
-         * Set this to true to disable authentication.
+         * {@return whether disable authentication or not}
          */
-        @ConfigItem
-        public boolean disabled;
+        @WithDefault("false")
+        boolean disabled();
 
         /**
          * An optional field that when is not empty has precedence over {@link #username} and {@link #password}. It behaves
          * the same way as {@literal NEO4J_AUTH} in the official docker image, containing both the username and password
          * separated via a single forward slash ({@code /}).
+         *
+         * @return a concrete value for the token, overriding all other settings
          */
-        @ConfigItem
-        public Optional<String> value;
+        Optional<String> value();
     }
 
     @ConfigGroup
-    static class TrustSettings {
+    interface TrustSettings {
 
-        public enum Strategy {
+        enum Strategy {
 
             TRUST_ALL_CERTIFICATES,
 
@@ -102,45 +103,37 @@ public class Neo4jConfiguration {
         }
 
         /**
-         * Configures which trust strategy to apply when using encrypted traffic.
+         * {@return which trust strategy to apply when using encrypted traffic}
          */
-        @ConfigItem(defaultValue = "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES")
-        public Strategy strategy;
+        @WithDefault("TRUST_SYSTEM_CA_SIGNED_CERTIFICATES")
+        Strategy strategy();
 
         /**
-         * The file of the certificate to use.
+         * {@return the file of the certificate to use}
          */
-        @ConfigItem
-        public Optional<Path> certFile = Optional.empty();
+        Optional<Path> certFile();
 
         /**
-         * If hostname verification is used.
+         * {@return whether hostname verification is used}
          */
-        @ConfigItem
-        public boolean hostnameVerificationEnabled;
+        @WithDefault("false")
+        boolean hostnameVerificationEnabled();
 
-        Config.TrustStrategy toInternalRepresentation() {
+        default Config.TrustStrategy toInternalRepresentation() {
 
             Config.TrustStrategy internalRepresentation;
-            Strategy nonNullStrategy = strategy == null ? Strategy.TRUST_SYSTEM_CA_SIGNED_CERTIFICATES : strategy;
-            switch (nonNullStrategy) {
-                case TRUST_ALL_CERTIFICATES:
-                    internalRepresentation = Config.TrustStrategy.trustAllCertificates();
-                    break;
-                case TRUST_SYSTEM_CA_SIGNED_CERTIFICATES:
-                    internalRepresentation = Config.TrustStrategy.trustSystemCertificates();
-                    break;
-                case TRUST_CUSTOM_CA_SIGNED_CERTIFICATES:
-
-                    File certFile = this.certFile.map(Path::toFile).filter(File::isFile)
+            Strategy nonNullStrategy = strategy() == null ? Strategy.TRUST_SYSTEM_CA_SIGNED_CERTIFICATES : strategy();
+            internalRepresentation = switch (nonNullStrategy) {
+                case TRUST_ALL_CERTIFICATES -> Config.TrustStrategy.trustAllCertificates();
+                case TRUST_SYSTEM_CA_SIGNED_CERTIFICATES -> Config.TrustStrategy.trustSystemCertificates();
+                case TRUST_CUSTOM_CA_SIGNED_CERTIFICATES -> {
+                    File certFile = certFile().map(Path::toFile).filter(File::isFile)
                             .orElseThrow(() -> new RuntimeException("Configured trust strategy requires a certificate file."));
-                    internalRepresentation = Config.TrustStrategy.trustCustomCertificateSignedBy(certFile);
-                    break;
-                default:
-                    throw new RuntimeException("Unknown trust strategy: " + this.strategy.name());
-            }
+                    yield Config.TrustStrategy.trustCustomCertificateSignedBy(certFile);
+                }
+            };
 
-            if (hostnameVerificationEnabled) {
+            if (hostnameVerificationEnabled()) {
                 internalRepresentation.withHostnameVerification();
             } else {
                 internalRepresentation.withoutHostnameVerification();
@@ -150,57 +143,52 @@ public class Neo4jConfiguration {
     }
 
     @ConfigGroup
-    static class Pool {
+    interface Pool {
 
         /**
-         * Flag, if metrics are enabled.
+         * {@return lag, if metrics are enabled}
          */
-        @ConfigItem(name = "metrics.enabled")
-        public boolean metricsEnabled;
+        @WithName("metrics.enabled")
+        @WithDefault("false")
+        boolean metricsEnabled();
 
         /**
-         * Flag, if leaked sessions logging is enabled.
+         * {@return if leaked sessions logging is enabled}
          */
-        @ConfigItem
-        public boolean logLeakedSessions;
+        @WithDefault("false")
+        boolean logLeakedSessions();
 
         /**
-         * The maximum amount of connections in the connection pool towards a single database.
+         * {@return the maximum amount of connections in the connection pool towards a single database}
          */
-        @ConfigItem(defaultValue = "100")
-        public int maxConnectionPoolSize;
+        @WithDefault("100")
+        int maxConnectionPoolSize();
 
         /**
          * Pooled connections that have been idle in the pool for longer than this timeout will be tested before they are used
          * again. The value {@literal 0} means connections will always be tested for validity and negative values mean
          * connections
          * will never be tested.
+         *
+         * @return the maximum idle time before connections are tested again
          */
-        @ConfigItem(defaultValue = "-0.001S")
-        public Duration idleTimeBeforeConnectionTest;
+        @WithDefault("-0.001S")
+        Duration idleTimeBeforeConnectionTest();
 
         /**
          * Pooled connections older than this threshold will be closed and removed from the pool.
+         *
+         * @return the lifetime of a connection
          */
-        @ConfigItem(defaultValue = "1H")
-        public Duration maxConnectionLifetime;
+        @WithDefault("1H")
+        Duration maxConnectionLifetime();
 
         /**
          * Acquisition of new connections will be attempted for at most configured timeout.
+         *
+         * @return the acquisition timeout
          */
-        @ConfigItem(defaultValue = "1M")
-        public Duration connectionAcquisitionTimeout;
-
-        @Override
-        public String toString() {
-            return "Pool{" +
-                    "metricsEnabled=" + metricsEnabled +
-                    ", logLeakedSessions=" + logLeakedSessions +
-                    ", maxConnectionPoolSize=" + maxConnectionPoolSize +
-                    ", idleTimeBeforeConnectionTest=" + idleTimeBeforeConnectionTest +
-                    ", maxConnectionLifetime=" + maxConnectionLifetime +
-                    ", connectionAcquisitionTimeout=" + connectionAcquisitionTimeout +
-                    '}';
-        }
+        @WithDefault("1M")
+        Duration connectionAcquisitionTimeout();
     }
 }

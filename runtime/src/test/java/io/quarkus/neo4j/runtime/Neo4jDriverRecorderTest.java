@@ -2,6 +2,8 @@ package io.quarkus.neo4j.runtime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
@@ -15,9 +17,10 @@ class Neo4jDriverRecorderTest {
     @Test // GH-168
     void authTokenShouldBeNoneWhenDisabled() {
 
-        var configuration = new Neo4jConfiguration();
-        configuration.authentication = new Neo4jConfiguration.Authentication();
-        configuration.authentication.disabled = true;
+        var configuration = mock(Neo4jConfiguration.class);
+        var authentication = mock(Neo4jConfiguration.Authentication.class);
+        when(authentication.disabled()).thenReturn(true);
+        when(configuration.authentication()).thenReturn(authentication);
         var authToken = Neo4jDriverRecorder.getAuthToken(configuration);
         assertThat(authToken).isEqualTo(AuthTokens.none());
     }
@@ -25,11 +28,12 @@ class Neo4jDriverRecorderTest {
     @Test // GH-168
     void shouldUseUserNamePassword() {
 
-        var configuration = new Neo4jConfiguration();
-        configuration.authentication = new Neo4jConfiguration.Authentication();
-        configuration.authentication.value = Optional.empty();
-        configuration.authentication.username = "foo";
-        configuration.authentication.password = "bar";
+        var configuration = mock(Neo4jConfiguration.class);
+        var authentication = mock(Neo4jConfiguration.Authentication.class);
+        when(authentication.value()).thenReturn(Optional.empty());
+        when(authentication.username()).thenReturn("foo");
+        when(authentication.password()).thenReturn("bar");
+        when(configuration.authentication()).thenReturn(authentication);
         var authToken = Neo4jDriverRecorder.getAuthToken(configuration);
         assertThat(authToken).isEqualTo(AuthTokens.basic("foo", "bar"));
     }
@@ -37,9 +41,10 @@ class Neo4jDriverRecorderTest {
     @Test // GH-168
     void shouldUseValue() {
 
-        var configuration = new Neo4jConfiguration();
-        configuration.authentication = new Neo4jConfiguration.Authentication();
-        configuration.authentication.value = Optional.of("foo/bar");
+        var configuration = mock(Neo4jConfiguration.class);
+        var authentication = mock(Neo4jConfiguration.Authentication.class);
+        when(authentication.value()).thenReturn(Optional.of("foo/bar"));
+        when(configuration.authentication()).thenReturn(authentication);
         var authToken = Neo4jDriverRecorder.getAuthToken(configuration);
         assertThat(authToken).isEqualTo(AuthTokens.basic("foo", "bar"));
     }
@@ -47,11 +52,12 @@ class Neo4jDriverRecorderTest {
     @Test // GH-168
     void valueShouldHavePrecedence() {
 
-        var configuration = new Neo4jConfiguration();
-        configuration.authentication = new Neo4jConfiguration.Authentication();
-        configuration.authentication.value = Optional.of("foo/bar");
-        configuration.authentication.username = "wurst";
-        configuration.authentication.password = "salat";
+        var configuration = mock(Neo4jConfiguration.class);
+        var authentication = mock(Neo4jConfiguration.Authentication.class);
+        when(authentication.value()).thenReturn(Optional.of("foo/bar"));
+        when(authentication.username()).thenReturn("wurst");
+        when(authentication.password()).thenReturn("salat");
+        when(configuration.authentication()).thenReturn(authentication);
         var authToken = Neo4jDriverRecorder.getAuthToken(configuration);
         assertThat(authToken).isEqualTo(AuthTokens.basic("foo", "bar"));
     }

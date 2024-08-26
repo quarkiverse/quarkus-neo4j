@@ -56,7 +56,7 @@ class Neo4jDevServicesProcessor {
             LoggingSetupBuildItem loggingSetupBuildItem,
             GlobalDevServicesConfig globalDevServicesConfig) {
 
-        var configuration = new Neo4jDevServiceConfig(neo4jBuildTimeConfig.devservices);
+        var configuration = new Neo4jDevServiceConfig(neo4jBuildTimeConfig.devservices());
 
         if (devService != null) {
             if (configuration.equals(runningConfiguration)) {
@@ -213,10 +213,10 @@ class Neo4jDevServicesProcessor {
 
         Neo4jDevServiceConfig(DevServicesBuildTimeConfig devServicesConfig) {
             this.devServicesEnabled = enabled(devServicesConfig);
-            this.imageName = devServicesConfig.imageName;
-            this.additionalEnv = new HashMap<>(devServicesConfig.additionalEnv);
-            this.fixedBoltPort = devServicesConfig.boltPort;
-            this.fixedHttpPort = devServicesConfig.httpPort;
+            this.imageName = devServicesConfig.imageName();
+            this.additionalEnv = new HashMap<>(devServicesConfig.additionalEnv());
+            this.fixedBoltPort = devServicesConfig.boltPort();
+            this.fixedHttpPort = devServicesConfig.httpPort();
         }
 
         @Override
@@ -248,6 +248,6 @@ class Neo4jDevServicesProcessor {
      * @return {@literal true} if Neo4j dev services are enabled or not
      */
     static boolean enabled(DevServicesBuildTimeConfig devServicesConfig) {
-        return Optional.ofNullable(devServicesConfig).flatMap(cfg -> cfg.enabled).orElse(true);
+        return Optional.ofNullable(devServicesConfig).flatMap(DevServicesBuildTimeConfig::enabled).orElse(true);
     }
 }

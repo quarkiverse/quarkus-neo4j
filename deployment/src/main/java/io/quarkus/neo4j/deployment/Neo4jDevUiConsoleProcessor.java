@@ -16,7 +16,7 @@ class Neo4jDevUiConsoleProcessor {
             Neo4jBuildTimeConfig neo4jBuildTimeConfig) {
 
         var cardPageBuildItem = new CardPageBuildItem();
-        if (Neo4jDevServicesProcessor.enabled(neo4jBuildTimeConfig.devservices)) {
+        if (Neo4jDevServicesProcessor.enabled(neo4jBuildTimeConfig.devservices())) {
 
             // Find the appropriate config
             for (DevServicesResultBuildItem runningDevService : runningDevServices) {

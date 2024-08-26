@@ -30,7 +30,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.13.2</quarkus.version>
+    <quarkus.version>3.14.0</quarkus.version>
     <assertj.version>3.26.3</assertj.version>
     <neo4j-java-driver.version>5.23.0</neo4j-java-driver.version>
   </properties>
@@ -61,6 +61,11 @@
         <plugin>
           <groupId>io.quarkus</groupId>
           <artifactId>quarkus-maven-plugin</artifactId>
+          <version>${quarkus.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>io.quarkus</groupId>
+          <artifactId>quarkus-config-doc-maven-plugin</artifactId>
           <version>${quarkus.version}</version>
         </plugin>
         <plugin>

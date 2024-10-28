@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.quarkiverse.neo4j</groupId>
         <artifactId>quarkus-neo4j-parent</artifactId>
-        <version>4.4.1-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>quarkus-neo4j-integration-tests</artifactId>
     <name>Quarkus - Neo4j - Integration Tests</name>
@@ -13,7 +13,7 @@
     <properties>
         <neo4j.uri>bolt://localhost:60513</neo4j.uri>
         <neo4j.username>neo4j</neo4j.username>
-        <neo4j.password>secret</neo4j.password>
+        <neo4j.password>verysecret</neo4j.password>
     </properties>
 
     <dependencies>
@@ -85,7 +85,7 @@
                 <configuration>
                     <images>
                         <image>
-                            <name>neo4j:4.4</name>
+                            <name>neo4j:5</name>
                             <run>
                                 <ports>
                                     <port>60513:7687</port>

@@ -135,10 +135,11 @@ class Neo4jDevServicesProcessor {
         }
 
         var boldIsReachable = Boolean.getBoolean("io.quarkus.neo4j.deployment.devservices.assumeBoltIsReachable")
-                || new BoltHandshaker("localhost", 7687).isBoltPortReachable(Duration.ofSeconds(5));
-        if (boldIsReachable) {
+                || new BoltHandshaker("localhost", ExtNeo4jContainer.DEFAULT_BOLT_PORT)
+                        .isBoltPortReachable(Duration.ofSeconds(5));
+        if (boldIsReachable && configuration.fixedBoltPort.orElse(-1) == ExtNeo4jContainer.DEFAULT_BOLT_PORT) {
             log.warn(
-                    "Not starting Dev Services for Neo4j, as the default config points to a reachable address. Be aware that your local database will be used.");
+                    "Not starting Dev Services for Neo4j, as the configuration requests the same fixed bolt port.");
             return null;
         }
 
@@ -168,6 +169,7 @@ class Neo4jDevServicesProcessor {
 
         static ExtNeo4jContainer of(Neo4jDevServiceConfig config) {
 
+            @SuppressWarnings("resource")
             var container = new ExtNeo4jContainer(DockerImageName.parse(config.imageName).asCompatibleSubstituteFor("neo4j"));
             config.fixedBoltPort.ifPresent(port -> container.addFixedExposedPort(port, DEFAULT_BOLT_PORT));
             config.fixedHttpPort.ifPresent(port -> container.addFixedExposedPort(port, DEFAULT_HTTP_PORT));

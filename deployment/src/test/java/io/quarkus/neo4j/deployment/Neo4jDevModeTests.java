@@ -215,9 +215,10 @@ public class Neo4jDevModeTests {
                 .withEmptyApplication()
                 .setLogRecordPredicate(record -> true)
                 .withConfigurationResource("application.properties")
+                .overrideConfigKey("quarkus.neo4j.devservices.bolt-port", "7687")
                 .assertLogRecords(records -> assertThat(records).extracting(LogRecord::getMessage)
                         .anyMatch(s -> s.startsWith(
-                                "Not starting Dev Services for Neo4j, as the default config points to a reachable address.")));
+                                "Not starting Dev Services for Neo4j, as the configuration requests the same fixed bolt port.")));
 
         @AfterAll
         static void deleteSystemPropertyAgain() {

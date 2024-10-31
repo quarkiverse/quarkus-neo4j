@@ -30,7 +30,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>3.16.0</quarkus.version>
     <assertj.version>3.26.3</assertj.version>
-    <neo4j-java-driver.version>5.26.0</neo4j-java-driver.version>
+    <neo4j-java-driver.version>5.26.1</neo4j-java-driver.version>
   </properties>
   <dependencyManagement>
     <dependencies>

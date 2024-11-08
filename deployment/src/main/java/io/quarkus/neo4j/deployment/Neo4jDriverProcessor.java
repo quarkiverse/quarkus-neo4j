@@ -76,14 +76,18 @@ class Neo4jDriverProcessor {
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.UnpooledHeapByteBuf"));
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.UnreleasableByteBuf"));
 
-        classes.produce(new RuntimeInitializedClassBuildItem("org.neo4j.driver.internal.async.connection.BoltProtocolUtil"));
-        classes.produce(new RuntimeInitializedClassBuildItem("org.neo4j.driver.internal.async.connection.ChannelAttributes"));
+        classes.produce(new RuntimeInitializedClassBuildItem(
+                "org.neo4j.driver.internal.bolt.basicimpl.async.connection.BoltProtocolUtil"));
+        classes.produce(new RuntimeInitializedClassBuildItem(
+                "org.neo4j.driver.internal.bolt.basicimpl.async.connection.ChannelAttributes"));
         classes.produce(
-                new RuntimeInitializedClassBuildItem("org.neo4j.driver.internal.async.connection.ChannelConnectedListener"));
+                new RuntimeInitializedClassBuildItem(
+                        "org.neo4j.driver.internal.bolt.basicimpl.async.connection.ChannelConnectedListener"));
 
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.handler.codec.compression.ZstdConstants"));
+        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.internal.tcnative.SSL"));
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.util.AbstractReferenceCounted"));
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.util.internal.logging.Log4JLogger"));
-        classes.produce(new RuntimeInitializedClassBuildItem("io.netty.internal.tcnative.SSL"));
 
         // See https://github.com/quarkiverse/quarkus-neo4j/pull/208#issuecomment-1784849182
         classes.produce(new RuntimeInitializedClassBuildItem("io.vertx.core.net.impl.SSLHelper"));

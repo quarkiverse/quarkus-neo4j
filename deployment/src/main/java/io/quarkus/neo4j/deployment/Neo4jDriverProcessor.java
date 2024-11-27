@@ -64,6 +64,11 @@ class Neo4jDriverProcessor {
     }
 
     @BuildStep
+    RuntimeInitializedPackageBuildItem deferBoltConnectionImplToRuntime() {
+        return new RuntimeInitializedPackageBuildItem("org.neo4j.driver.internal.bolt.basicimpl.async.connection");
+    }
+
+    @BuildStep
     void deferMiscellaneousClassesToRuntime(BuildProducer<RuntimeInitializedClassBuildItem> classes) {
 
         // Those are the ones we use, there are more in the package and if we move the whole package some Quarkus stuff
@@ -75,14 +80,6 @@ class Neo4jDriverProcessor {
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.PooledByteBufAllocator"));
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.UnpooledHeapByteBuf"));
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.buffer.UnreleasableByteBuf"));
-
-        classes.produce(new RuntimeInitializedClassBuildItem(
-                "org.neo4j.driver.internal.bolt.basicimpl.async.connection.BoltProtocolUtil"));
-        classes.produce(new RuntimeInitializedClassBuildItem(
-                "org.neo4j.driver.internal.bolt.basicimpl.async.connection.ChannelAttributes"));
-        classes.produce(
-                new RuntimeInitializedClassBuildItem(
-                        "org.neo4j.driver.internal.bolt.basicimpl.async.connection.ChannelConnectedListener"));
 
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.handler.codec.compression.ZstdConstants"));
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.internal.tcnative.SSL"));

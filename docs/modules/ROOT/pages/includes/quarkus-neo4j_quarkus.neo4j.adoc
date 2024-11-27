@@ -81,6 +81,8 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices
 --
 This value can be used to specify the port to which the bolt-port of the container is exposed. It must be a free port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be logged on which port the Neo4j container is reachable over bolt.
 
+Ignored when container sharing is enabled.
+
 
 ifdef::add-copy-button-to-env-var[]
 Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_BOLT_PORT+++[]
@@ -98,6 +100,8 @@ a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices
 --
 This value can be used to specify the port to which the http-port of the container is exposed. It must be a free port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be logged on which port the Neo4j Browser is available.
 
+Ignored when container sharing is enabled.
+
 
 ifdef::add-copy-button-to-env-var[]
 Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_HTTP_PORT+++[]
@@ -108,6 +112,63 @@ endif::add-copy-button-to-env-var[]
 --
 |int
 |
+
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-shared]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-shared[`quarkus.neo4j.devservices.shared`]##
+
+[.description]
+--
+Indicates if the Neo4j server managed by Quarkus Dev Services is shared. When shared, Quarkus looks for running containers using label-based service discovery. If a matching container is found, it is used, and so a second one is not started. Otherwise, Dev Services for Neo4j starts a new container.
+
+The discovery uses the `quarkus-dev-service-neo4j` label. The value is configured using the `service-name` property.
+
+Container sharing is only used in dev mode and disabled by default
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_SHARED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_SHARED+++`
+endif::add-copy-button-to-env-var[]
+--
+|boolean
+|`false`
+
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-service-name]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-service-name[`quarkus.neo4j.devservices.service-name`]##
+
+[.description]
+--
+The value of the `quarkus-dev-service-neo4j` label attached to the started container. This property is used when `shared` is set to `true`. In this case, before starting a container, Dev Services for Neo4j looks for a container with the `quarkus-dev-service-neo4j` label set to the configured value. If found, it will use this container instead of starting a new one. Otherwise, it starts a new container with the `quarkus-dev-service-neo4j` label set to the specified value.
+
+This property is used when you need multiple shared Neo4j servers.
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_SERVICE_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_SERVICE_NAME+++`
+endif::add-copy-button-to-env-var[]
+--
+|string
+|`neo4j`
+
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-shared-password]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-shared-password[`quarkus.neo4j.devservices.shared-password`]##
+
+[.description]
+--
+This property is used only when you create multiple shared Neo4j servers
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_NEO4J_DEVSERVICES_SHARED_PASSWORD+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_SHARED_PASSWORD+++`
+endif::add-copy-button-to-env-var[]
+--
+|string
+|`verysecret`
 
 a| [[quarkus-neo4j_quarkus-neo4j-uri]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-uri[`quarkus.neo4j.uri`]##
 

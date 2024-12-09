@@ -174,7 +174,7 @@ a| [[quarkus-neo4j_quarkus-neo4j-uri]] [.property-path]##link:#quarkus-neo4j_qua
 
 [.description]
 --
-the uri this driver should connect to. The driver supports bolt, bolt+routing or neo4j as schemes
+the uri this driver should connect to. The driver supports bolt, bolt{plus}routing or neo4j as schemes
 
 
 ifdef::add-copy-button-to-env-var[]

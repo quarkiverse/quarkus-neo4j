@@ -65,7 +65,7 @@ class Neo4jDriverProcessor {
 
     @BuildStep
     RuntimeInitializedPackageBuildItem deferBoltConnectionImplToRuntime() {
-        return new RuntimeInitializedPackageBuildItem("org.neo4j.driver.internal.bolt.basicimpl.async.connection");
+        return new RuntimeInitializedPackageBuildItem("org.neo4j.bolt.connection.netty.impl.async.connection");
     }
 
     @BuildStep

@@ -1,6 +1,6 @@
 # Quarkus Neo4j
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.neo4j/quarkus-neo4j?logo=apache-maven&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.neo4j/quarkus-neo4j)
@@ -40,6 +40,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/nijuichien"><img src="https://avatars.githubusercontent.com/u/87717636?v=4?s=100" width="100px;" alt="Jui-Chien Ni"/><br /><sub><b>Jui-Chien Ni</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/issues?q=author%3Anijuichien" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/injectives"><img src="https://avatars.githubusercontent.com/u/11927660?v=4?s=100" width="100px;" alt="Dmitriy Tverdiakov"/><br /><sub><b>Dmitriy Tverdiakov</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=injectives" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

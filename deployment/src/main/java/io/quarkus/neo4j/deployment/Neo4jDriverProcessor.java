@@ -14,7 +14,6 @@ import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedPackageBuildItem;
 import io.quarkus.deployment.metrics.MetricsFactoryConsumerBuildItem;
-import io.quarkus.neo4j.runtime.Neo4jConfiguration;
 import io.quarkus.neo4j.runtime.Neo4jDriverRecorder;
 import io.quarkus.runtime.RuntimeValue;
 import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
@@ -34,10 +33,9 @@ class Neo4jDriverProcessor {
     @Record(ExecutionTime.RUNTIME_INIT)
     Neo4jDriverBuildItem configureDriverProducer(Neo4jDriverRecorder recorder,
             BuildProducer<SyntheticBeanBuildItem> syntheticBeans,
-            Neo4jConfiguration configuration,
             ShutdownContextBuildItem shutdownContext) {
 
-        RuntimeValue<Driver> driverHolder = recorder.initializeDriver(configuration, shutdownContext);
+        RuntimeValue<Driver> driverHolder = recorder.initializeDriver(shutdownContext);
         syntheticBeans
                 .produce(SyntheticBeanBuildItem.configure(Driver.class).runtimeValue(driverHolder).setRuntimeInit().done());
 
@@ -52,10 +50,10 @@ class Neo4jDriverProcessor {
 
     @BuildStep
     @Record(ExecutionTime.RUNTIME_INIT)
-    void metrics(Neo4jConfiguration configuration,
+    void metrics(
             Neo4jDriverRecorder recorder,
             BuildProducer<MetricsFactoryConsumerBuildItem> metrics) {
-        metrics.produce(new MetricsFactoryConsumerBuildItem(recorder.registerMetrics(configuration)));
+        metrics.produce(new MetricsFactoryConsumerBuildItem(recorder.registerMetrics()));
     }
 
     @BuildStep

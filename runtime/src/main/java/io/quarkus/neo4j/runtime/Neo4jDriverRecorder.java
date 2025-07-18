@@ -33,15 +33,22 @@ public class Neo4jDriverRecorder {
 
     private static final Logger log = Logger.getLogger(Neo4jDriverRecorder.class);
 
-    public RuntimeValue<Driver> initializeDriver(Neo4jConfiguration configuration, ShutdownContext shutdownContext) {
+    private final RuntimeValue<Neo4jConfiguration> configuration;
 
-        String uri = configuration.uri();
-        AuthToken authToken = getAuthToken(configuration);
+    public Neo4jDriverRecorder(RuntimeValue<Neo4jConfiguration> configuration) {
+        this.configuration = configuration;
+    }
+
+    public RuntimeValue<Driver> initializeDriver(ShutdownContext shutdownContext) {
+
+        String uri = configuration.getValue().uri();
+        AuthToken authToken = getAuthToken(configuration.getValue());
 
         Config.ConfigBuilder configBuilder = createBaseConfig();
-        configureSsl(configBuilder, configuration);
-        configurePoolSettings(configBuilder, configuration.pool());
-        configBuilder.withMaxTransactionRetryTime(configuration.maxTransactionRetryTime().toMillis(), TimeUnit.MILLISECONDS);
+        configureSsl(configBuilder, configuration.getValue());
+        configurePoolSettings(configBuilder, configuration.getValue().pool());
+        configBuilder.withMaxTransactionRetryTime(configuration.getValue().maxTransactionRetryTime().toMillis(),
+                TimeUnit.MILLISECONDS);
 
         Driver driver = GraphDatabase.driver(uri, authToken, configBuilder.build());
         shutdownContext.addShutdownTask(driver::close);
@@ -70,8 +77,8 @@ public class Neo4jDriverRecorder {
         return AuthTokens.basic(value.substring(0, idx), value.substring(idx + 1));
     }
 
-    public Consumer<MetricsFactory> registerMetrics(Neo4jConfiguration configuration) {
-        if (configuration.pool() != null && configuration.pool().metricsEnabled()) {
+    public Consumer<MetricsFactory> registerMetrics() {
+        if (configuration.getValue().pool() != null && configuration.getValue().pool().metricsEnabled()) {
             return metricsFactory -> {
                 // if the pool hasn't been used yet, the ConnectionPoolMetrics object doesn't exist, so use zeros instead
                 metricsFactory.builder("neo4j.acquired").buildCounter(

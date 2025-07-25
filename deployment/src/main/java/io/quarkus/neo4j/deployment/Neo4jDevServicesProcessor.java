@@ -54,6 +54,7 @@ class Neo4jDevServicesProcessor {
 
     private static final ContainerLocator CONTAINER_LOCATOR = new ContainerLocator(DEV_SERVICE_LABEL, DEFAULT_BOLT_PORT);
 
+    @SuppressWarnings("deprecation")
     static volatile RunningDevService devService;
     static volatile Neo4jDevServiceConfig runningConfiguration;
     static volatile boolean first = true;
@@ -116,9 +117,10 @@ class Neo4jDevServicesProcessor {
     @Consume(DevServicesResultBuildItem.class)
     DevServiceDescriptionBuildItem renderDevServiceDevUICard() {
         return devService == null ? null
-                : new DevServiceDescriptionBuildItem(Feature.NEO4J.getName(), null, devService.getConfig());
+                : new DevServiceDescriptionBuildItem(Feature.NEO4J.getName(), devService.getConfig());
     }
 
+    @SuppressWarnings("deprecation")
     private RunningDevService startNeo4j(Neo4jDevServiceConfig configuration, LaunchMode launchMode, boolean useSharedNetwork,
             Optional<Duration> timeout) {
 
@@ -205,7 +207,6 @@ class Neo4jDevServicesProcessor {
 
             if (useSharedNetwork) {
                 var name = ConfigureUtil.configureSharedNetwork(container, "neo4j");
-                System.out.println(name);
             }
 
             if (launchMode == LaunchMode.DEVELOPMENT && config.serviceName() != null) {

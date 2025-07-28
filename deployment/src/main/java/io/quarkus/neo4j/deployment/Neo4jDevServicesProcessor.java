@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.function.Function;
 
 import org.jboss.logging.Logger;
 import org.testcontainers.containers.Neo4jContainer;
@@ -19,15 +20,13 @@ import io.quarkus.deployment.Feature;
 import io.quarkus.deployment.IsDockerWorking;
 import io.quarkus.deployment.IsNormal;
 import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.deployment.annotations.Consume;
 import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
-import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
 import io.quarkus.deployment.builditem.DevServicesSharedNetworkBuildItem;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
+import io.quarkus.deployment.builditem.Startable;
 import io.quarkus.deployment.console.ConsoleInstalledBuildItem;
 import io.quarkus.deployment.console.StartupLogCompressor;
-import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.DevServicesConfig;
 import io.quarkus.deployment.logging.LoggingSetupBuildItem;
 import io.quarkus.devservices.common.ConfigureUtil;
@@ -54,11 +53,6 @@ class Neo4jDevServicesProcessor {
 
     private static final ContainerLocator CONTAINER_LOCATOR = new ContainerLocator(DEV_SERVICE_LABEL, DEFAULT_BOLT_PORT);
 
-    @SuppressWarnings("deprecation")
-    static volatile RunningDevService devService;
-    static volatile Neo4jDevServiceConfig runningConfiguration;
-    static volatile boolean first = true;
-
     private final IsDockerWorking isDockerWorking = new IsDockerWorking(true);
 
     @BuildStep(onlyIfNot = IsNormal.class, onlyIf = DevServicesConfig.Enabled.class)
@@ -73,14 +67,6 @@ class Neo4jDevServicesProcessor {
 
         var configuration = new Neo4jDevServiceConfig(neo4jBuildTimeConfig.devservices());
 
-        if (devService != null) {
-            if (configuration.equals(runningConfiguration)) {
-                return devService.toBuildItem();
-            }
-            shutdownNeo4j();
-            runningConfiguration = null;
-        }
-
         var compressor = new StartupLogCompressor(
                 (launchMode.isTest() ? "(test) " : "") + "Neo4j Dev Services Starting:", consoleInstalledBuildItem,
                 loggingSetupBuildItem);
@@ -88,40 +74,25 @@ class Neo4jDevServicesProcessor {
         try {
             boolean useSharedNetwork = DevServicesSharedNetworkBuildItem.isSharedNetworkRequired(devServicesConfig,
                     devServicesSharedNetworkBuildItem);
-            devService = startNeo4j(configuration, launchMode.getLaunchMode(), useSharedNetwork,
+            return startNeo4j(configuration, launchMode.getLaunchMode(), useSharedNetwork,
                     devServicesConfig.timeout());
         } catch (Throwable t) {
             compressor.closeAndDumpCaptured();
             throw new RuntimeException(t);
         }
-
-        // Configure the watch dog
-        if (first) {
-            first = false;
-            Runnable closeTask = () -> {
-                if (devService != null) {
-                    shutdownNeo4j();
-                    log.info("Dev Services for Neo4j shut down.");
-                }
-                first = true;
-                runningConfiguration = null;
-            };
-            closeBuildItem.addCloseTask(closeTask, true);
-        }
-        runningConfiguration = configuration;
-
-        return devService == null ? null : devService.toBuildItem();
     }
 
-    @BuildStep(onlyIfNot = IsNormal.class, onlyIf = DevServicesConfig.Enabled.class)
-    @Consume(DevServicesResultBuildItem.class)
-    DevServiceDescriptionBuildItem renderDevServiceDevUICard() {
-        return devService == null ? null
-                : new DevServiceDescriptionBuildItem(Feature.NEO4J.getName(), devService.getConfig());
-    }
-
-    @SuppressWarnings("deprecation")
-    private RunningDevService startNeo4j(Neo4jDevServiceConfig configuration, LaunchMode launchMode, boolean useSharedNetwork,
+    /*
+     * @BuildStep(onlyIfNot = IsNormal.class, onlyIf = DevServicesConfig.Enabled.class)
+     *
+     * @Consume(DevServicesResultBuildItem.class)
+     * DevServiceDescriptionBuildItem renderDevServiceDevUICard() {
+     * return devService == null ? null
+     * : new DevServiceDescriptionBuildItem(Feature.NEO4J.getName(), devService.getConfig());
+     * }
+     */
+    private DevServicesResultBuildItem startNeo4j(Neo4jDevServiceConfig configuration, LaunchMode launchMode,
+            boolean useSharedNetwork,
             Optional<Duration> timeout) {
 
         if (!isDockerWorking.getAsBoolean()) {
@@ -155,42 +126,38 @@ class Neo4jDevServicesProcessor {
                     var config = Map.of(
                             NEO4J_URI, String.format("bolt://" + containerAddress.getUrl()),
                             NEO4J_PASSWORD_PROP, configuration.sharedPassword());
-                    return new RunningDevService(Feature.NEO4J.getName(), containerAddress.getId(), null, config);
+                    return DevServicesResultBuildItem.discovered()
+                            .feature(Feature.NEO4J)
+                            .containerId(containerAddress.getId())
+                            .config(config)
+                            .build();
                 })
                 .orElseGet(() -> {
-                    @SuppressWarnings("resource")
                     var neo4jContainer = ExtNeo4jContainer.of(launchMode, configuration, useSharedNetwork);
                     configuration.additionalEnv.forEach(neo4jContainer::addEnv);
                     timeout.ifPresent(neo4jContainer::withStartupTimeout);
-                    neo4jContainer.start();
 
-                    var config = Map.of(
-                            NEO4J_URI, neo4jContainer.getBoltUrl(),
-                            NEO4J_BROWSER_URL, neo4jContainer.getBrowserUrl(),
-                            NEO4J_PASSWORD_PROP, neo4jContainer.getAdminPassword());
+                    var config = Map.<String, Function<Startable, String>> of(
+                            NEO4J_URI, startable -> ((Neo4jStartable) startable).neo4jContainer.getBoltUrl(),
+                            NEO4J_BROWSER_URL, startable -> ((Neo4jStartable) startable).neo4jContainer.getBrowserUrl(),
+                            NEO4J_PASSWORD_PROP, startable -> ((Neo4jStartable) startable).neo4jContainer.getAdminPassword());
 
-                    log.infof("Dev Services started a Neo4j container reachable at %s", neo4jContainer.getBoltUrl());
-                    log.infof("Neo4j Browser is reachable at %s", neo4jContainer.getBrowserUrl());
-                    log.infof("The username for both endpoints is `%s`, authenticated by `%s`", "neo4j",
-                            neo4jContainer.getAdminPassword());
-                    log.infof("Connect via Cypher-Shell: cypher-shell -u %s -p %s -a %s", "neo4j",
-                            neo4jContainer.getAdminPassword(), neo4jContainer.getBoltUrl());
-
-                    return new RunningDevService(Feature.NEO4J.getName(), neo4jContainer.getContainerId(),
-                            neo4jContainer::close, config);
+                    var neo4jStartable = new Neo4jStartable(neo4jContainer);
+                    return DevServicesResultBuildItem.owned()
+                            .feature(Feature.NEO4J)
+                            .configProvider(config)
+                            .startable(() -> neo4jStartable)
+                            .postStartHook(startable -> {
+                                var container = startable.neo4jContainer;
+                                log.infof("Dev Services started a Neo4j container reachable at %s", container.getBoltUrl());
+                                log.infof("Neo4j Browser is reachable at %s", container.getBrowserUrl());
+                                log.infof("The username for both endpoints is `%s`, authenticated by `%s`", "neo4j",
+                                        container.getAdminPassword());
+                                log.infof("Connect via Cypher-Shell: cypher-shell -u %s -p %s -a %s", "neo4j",
+                                        container.getAdminPassword(), container.getBoltUrl());
+                            })
+                            .build();
                 });
-    }
-
-    private void shutdownNeo4j() {
-        if (devService != null) {
-            try {
-                devService.close();
-            } catch (Throwable e) {
-                log.error("Failed to stop Neo4j container", e);
-            } finally {
-                devService = null;
-            }
-        }
     }
 
     private final static class ExtNeo4jContainer extends Neo4jContainer<ExtNeo4jContainer> {
@@ -242,6 +209,29 @@ class Neo4jDevServicesProcessor {
             var command = String.format("export NEO4J_dbms_connector_bolt_advertised__address=%s:%d\n", getHost(),
                     mappedPort);
             copyFileToContainer(Transferable.of(command.getBytes(StandardCharsets.UTF_8)), "/testcontainers_env");
+        }
+    }
+
+    record Neo4jStartable(ExtNeo4jContainer neo4jContainer) implements Startable {
+
+        @Override
+        public void start() {
+            this.neo4jContainer.start();
+        }
+
+        @Override
+        public String getConnectionInfo() {
+            return this.neo4jContainer.getBoltUrl();
+        }
+
+        @Override
+        public String getContainerId() {
+            return this.neo4jContainer.getContainerId();
+        }
+
+        @Override
+        public void close() {
+            this.neo4jContainer.close();
         }
     }
 

@@ -26,7 +26,7 @@ Environment variable: `+++QUARKUS_NEO4J_HEALTH_ENABLED+++`
 endif::add-copy-button-to-env-var[]
 --
 |boolean
-|`true`
+|`+++true+++`
 
 a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-enabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-enabled[`quarkus.neo4j.devservices.enabled`]##
 ifdef::add-copy-button-to-config-props[]
@@ -68,7 +68,7 @@ Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_IMAGE_NAME+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`neo4j:5`
+|`+++neo4j:5+++`
 
 a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env[`quarkus.neo4j.devservices.additional-env."additional-env"`]##
 ifdef::add-copy-button-to-config-props[]
@@ -160,7 +160,7 @@ Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_SHARED+++`
 endif::add-copy-button-to-env-var[]
 --
 |boolean
-|`false`
+|`+++false+++`
 
 a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-service-name]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-service-name[`quarkus.neo4j.devservices.service-name`]##
 ifdef::add-copy-button-to-config-props[]
@@ -183,7 +183,7 @@ Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_SERVICE_NAME+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`neo4j`
+|`+++neo4j+++`
 
 a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-shared-password]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-shared-password[`quarkus.neo4j.devservices.shared-password`]##
 ifdef::add-copy-button-to-config-props[]
@@ -204,7 +204,7 @@ Environment variable: `+++QUARKUS_NEO4J_DEVSERVICES_SHARED_PASSWORD+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`verysecret`
+|`+++verysecret+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-uri]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-uri[`quarkus.neo4j.uri`]##
 ifdef::add-copy-button-to-config-props[]
@@ -225,7 +225,7 @@ Environment variable: `+++QUARKUS_NEO4J_URI+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`bolt://localhost:7687`
+|`+++bolt://localhost:7687+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-encrypted]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-encrypted[`quarkus.neo4j.encrypted`]##
 ifdef::add-copy-button-to-config-props[]
@@ -246,7 +246,7 @@ Environment variable: `+++QUARKUS_NEO4J_ENCRYPTED+++`
 endif::add-copy-button-to-env-var[]
 --
 |boolean
-|`false`
+|`+++false+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-max-transaction-retry-time]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-max-transaction-retry-time[`quarkus.neo4j.max-transaction-retry-time`]##
 ifdef::add-copy-button-to-config-props[]
@@ -267,7 +267,7 @@ Environment variable: `+++QUARKUS_NEO4J_MAX_TRANSACTION_RETRY_TIME+++`
 endif::add-copy-button-to-env-var[]
 --
 |link:https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html[Duration] link:#duration-note-anchor-quarkus-neo4j_quarkus-neo4j[icon:question-circle[title=More information about the Duration format]]
-|`30S`
+|`+++30S+++`
 
 h|[[quarkus-neo4j_section_quarkus-neo4j-authentication]] [.section-name.section-level0]##link:#quarkus-neo4j_section_quarkus-neo4j-authentication[return the authentication++}++]##
 h|Type
@@ -292,7 +292,7 @@ Environment variable: `+++QUARKUS_NEO4J_AUTHENTICATION_USERNAME+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`neo4j`
+|`+++neo4j+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-authentication-password]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-password[`quarkus.neo4j.authentication.password`]##
 ifdef::add-copy-button-to-config-props[]
@@ -313,7 +313,7 @@ Environment variable: `+++QUARKUS_NEO4J_AUTHENTICATION_PASSWORD+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`neo4j`
+|`+++neo4j+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-authentication-disabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-disabled[`quarkus.neo4j.authentication.disabled`]##
 ifdef::add-copy-button-to-config-props[]
@@ -334,7 +334,7 @@ Environment variable: `+++QUARKUS_NEO4J_AUTHENTICATION_DISABLED+++`
 endif::add-copy-button-to-env-var[]
 --
 |boolean
-|`false`
+|`+++false+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-authentication-value]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-value[`quarkus.neo4j.authentication.value`]##
 ifdef::add-copy-button-to-config-props[]
@@ -381,7 +381,7 @@ Environment variable: `+++QUARKUS_NEO4J_TRUST_SETTINGS_STRATEGY+++`
 endif::add-copy-button-to-env-var[]
 --
 a|`trust-all-certificates`, `trust-custom-ca-signed-certificates`, `trust-system-ca-signed-certificates`
-|`trust-system-ca-signed-certificates`
+|`+++trust-system-ca-signed-certificates+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-trust-settings-cert-file]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-trust-settings-cert-file[`quarkus.neo4j.trust-settings.cert-file`]##
 ifdef::add-copy-button-to-config-props[]
@@ -423,7 +423,7 @@ Environment variable: `+++QUARKUS_NEO4J_TRUST_SETTINGS_HOSTNAME_VERIFICATION_ENA
 endif::add-copy-button-to-env-var[]
 --
 |boolean
-|`false`
+|`+++false+++`
 
 
 h|[[quarkus-neo4j_section_quarkus-neo4j-pool]] [.section-name.section-level0]##link:#quarkus-neo4j_section_quarkus-neo4j-pool[return the connection pool++}++]##
@@ -449,7 +449,7 @@ Environment variable: `+++QUARKUS_NEO4J_POOL_METRICS_ENABLED+++`
 endif::add-copy-button-to-env-var[]
 --
 |boolean
-|`false`
+|`+++false+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-pool-log-leaked-sessions]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-log-leaked-sessions[`quarkus.neo4j.pool.log-leaked-sessions`]##
 ifdef::add-copy-button-to-config-props[]
@@ -470,7 +470,7 @@ Environment variable: `+++QUARKUS_NEO4J_POOL_LOG_LEAKED_SESSIONS+++`
 endif::add-copy-button-to-env-var[]
 --
 |boolean
-|`false`
+|`+++false+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-pool-max-connection-pool-size]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-max-connection-pool-size[`quarkus.neo4j.pool.max-connection-pool-size`]##
 ifdef::add-copy-button-to-config-props[]
@@ -491,7 +491,7 @@ Environment variable: `+++QUARKUS_NEO4J_POOL_MAX_CONNECTION_POOL_SIZE+++`
 endif::add-copy-button-to-env-var[]
 --
 |int
-|`100`
+|`+++100+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-pool-idle-time-before-connection-test]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-idle-time-before-connection-test[`quarkus.neo4j.pool.idle-time-before-connection-test`]##
 ifdef::add-copy-button-to-config-props[]
@@ -512,7 +512,7 @@ Environment variable: `+++QUARKUS_NEO4J_POOL_IDLE_TIME_BEFORE_CONNECTION_TEST+++
 endif::add-copy-button-to-env-var[]
 --
 |link:https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html[Duration] link:#duration-note-anchor-quarkus-neo4j_quarkus-neo4j[icon:question-circle[title=More information about the Duration format]]
-|`-0.001S`
+|`+++-0.001S+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-pool-max-connection-lifetime]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-max-connection-lifetime[`quarkus.neo4j.pool.max-connection-lifetime`]##
 ifdef::add-copy-button-to-config-props[]
@@ -533,7 +533,7 @@ Environment variable: `+++QUARKUS_NEO4J_POOL_MAX_CONNECTION_LIFETIME+++`
 endif::add-copy-button-to-env-var[]
 --
 |link:https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html[Duration] link:#duration-note-anchor-quarkus-neo4j_quarkus-neo4j[icon:question-circle[title=More information about the Duration format]]
-|`1H`
+|`+++1H+++`
 
 a| [[quarkus-neo4j_quarkus-neo4j-pool-connection-acquisition-timeout]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-connection-acquisition-timeout[`quarkus.neo4j.pool.connection-acquisition-timeout`]##
 ifdef::add-copy-button-to-config-props[]
@@ -554,7 +554,7 @@ Environment variable: `+++QUARKUS_NEO4J_POOL_CONNECTION_ACQUISITION_TIMEOUT+++`
 endif::add-copy-button-to-env-var[]
 --
 |link:https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html[Duration] link:#duration-note-anchor-quarkus-neo4j_quarkus-neo4j[icon:question-circle[title=More information about the Duration format]]
-|`1M`
+|`+++1M+++`
 
 
 |===

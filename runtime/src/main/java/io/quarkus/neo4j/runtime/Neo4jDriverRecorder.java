@@ -3,23 +3,21 @@ package io.quarkus.neo4j.runtime;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 import org.jboss.logging.Logger;
 import org.neo4j.driver.AuthToken;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Config;
-import org.neo4j.driver.ConnectionPoolMetrics;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Logging;
 import org.neo4j.driver.internal.Scheme;
+import org.neo4j.driver.observation.metrics.ConnectionPoolMetrics;
+import org.neo4j.driver.observation.metrics.Metrics;
+import org.neo4j.driver.observation.metrics.MetricsObservationProvider;
 
-import io.quarkus.arc.Arc;
 import io.quarkus.bootstrap.graal.ImageInfo;
 import io.quarkus.runtime.RuntimeValue;
 import io.quarkus.runtime.ShutdownContext;
@@ -33,24 +31,41 @@ public class Neo4jDriverRecorder {
 
     private static final Logger log = Logger.getLogger(Neo4jDriverRecorder.class);
 
+    private static final boolean HAS_DRIVER_METRICS;
+
+    static {
+        boolean metricsObservationProviderFound = true;
+        try {
+            Class.forName("org.neo4j.driver.observation.metrics.MetricsObservationProvider", false,
+                    Neo4jDriverRecorder.class.getClassLoader());
+        } catch (ClassNotFoundException ex) {
+            metricsObservationProviderFound = false;
+        }
+        HAS_DRIVER_METRICS = metricsObservationProviderFound;
+    }
+
     private final RuntimeValue<Neo4jConfiguration> configuration;
 
     public Neo4jDriverRecorder(RuntimeValue<Neo4jConfiguration> configuration) {
         this.configuration = configuration;
     }
 
-    public RuntimeValue<Driver> initializeDriver(ShutdownContext shutdownContext) {
-
-        String uri = configuration.getValue().uri();
-        AuthToken authToken = getAuthToken(configuration.getValue());
-
+    public RuntimeValue<Config> buildConfig() {
         Config.ConfigBuilder configBuilder = createBaseConfig();
         configureSsl(configBuilder, configuration.getValue());
         configurePoolSettings(configBuilder, configuration.getValue().pool());
         configBuilder.withMaxTransactionRetryTime(configuration.getValue().maxTransactionRetryTime().toMillis(),
                 TimeUnit.MILLISECONDS);
 
-        Driver driver = GraphDatabase.driver(uri, authToken, configBuilder.build());
+        return new RuntimeValue<>(configBuilder.build());
+    }
+
+    public RuntimeValue<Driver> initializeDriver(ShutdownContext shutdownContext, RuntimeValue<Config> config) {
+
+        String uri = configuration.getValue().uri();
+        AuthToken authToken = getAuthToken(configuration.getValue());
+
+        Driver driver = GraphDatabase.driver(uri, authToken, config.getValue());
         shutdownContext.addShutdownTask(driver::close);
         return new RuntimeValue<>(driver);
     }
@@ -77,66 +92,49 @@ public class Neo4jDriverRecorder {
         return AuthTokens.basic(value.substring(0, idx), value.substring(idx + 1));
     }
 
-    public Consumer<MetricsFactory> registerMetrics() {
-        if (configuration.getValue().pool() != null && configuration.getValue().pool().metricsEnabled()) {
-            return metricsFactory -> {
-                // if the pool hasn't been used yet, the ConnectionPoolMetrics object doesn't exist, so use zeros instead
-                metricsFactory.builder("neo4j.acquired").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::acquired).orElse(0L));
-                metricsFactory.builder("neo4j.acquiring").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::acquiring).orElse(0));
-                metricsFactory.builder("neo4j.closed").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::closed).orElse(0L));
-                metricsFactory.builder("neo4j.created").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::created).orElse(0L));
-                metricsFactory.builder("neo4j.creating").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::creating).orElse(0));
-                metricsFactory.builder("neo4j.failedToCreate").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::failedToCreate).orElse(0L));
-                metricsFactory.builder("neo4j.timedOutToAcquire").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::timedOutToAcquire).orElse(0L));
-                metricsFactory.builder("neo4j.totalAcquisitionTime").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalAcquisitionTime).orElse(0L));
-                metricsFactory.builder("neo4j.totalConnectionTime").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalConnectionTime).orElse(0L));
-                metricsFactory.builder("neo4j.totalInUseCount").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
-                metricsFactory.builder("neo4j.totalInUseTime").buildCounter(
-                        () -> getConnectionPoolMetrics().map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
-            };
-        } else {
-            return metricsFactory -> {
+    public Consumer<MetricsFactory> registerMetrics(RuntimeValue<Config> config) {
 
+        if (!HAS_DRIVER_METRICS) {
+            return metricsFactory -> {
             };
         }
-    }
 
-    // Until the pool is actually used for the first time, the ConnectionPoolMetrics object does not exist,
-    // so this will be populated later
-    private static Optional<ConnectionPoolMetrics> connectionPoolMetrics = Optional.empty();
-
-    private synchronized Optional<ConnectionPoolMetrics> getConnectionPoolMetrics() {
-        if (!connectionPoolMetrics.isPresent()) {
-            connectionPoolMetrics = Arc.container().instance(Driver.class)
-                    .get()
-                    .metrics()
-                    .connectionPoolMetrics()
-                    .stream()
-                    .findFirst();
-        }
-        return connectionPoolMetrics;
+        return config.getValue().observationProvider()
+                .filter(MetricsObservationProvider.class::isInstance)
+                .map(MetricsObservationProvider.class::cast)
+                .map(MetricsObservationProvider::metrics)
+                .map(Metrics::connectionPoolMetrics)
+                .map(driverMetrics -> (Consumer<MetricsFactory>) metricsFactory -> {
+                    var connectionPoolMetrics = driverMetrics.stream().findFirst();
+                    // if the pool hasn't been used yet, the ConnectionPoolMetrics object doesn't exist, so use zeros instead
+                    metricsFactory.builder("neo4j.acquired").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::acquired).orElse(0L));
+                    metricsFactory.builder("neo4j.acquiring").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::acquiring).orElse(0));
+                    metricsFactory.builder("neo4j.closed").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::closed).orElse(0L));
+                    metricsFactory.builder("neo4j.created").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::created).orElse(0L));
+                    metricsFactory.builder("neo4j.creating").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::creating).orElse(0));
+                    metricsFactory.builder("neo4j.failedToCreate").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::failedToCreate).orElse(0L));
+                    metricsFactory.builder("neo4j.timedOutToAcquire").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::timedOutToAcquire).orElse(0L));
+                    metricsFactory.builder("neo4j.totalAcquisitionTime").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalAcquisitionTime).orElse(0L));
+                    metricsFactory.builder("neo4j.totalConnectionTime").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalConnectionTime).orElse(0L));
+                    metricsFactory.builder("neo4j.totalInUseCount").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
+                    metricsFactory.builder("neo4j.totalInUseTime").buildCounter(
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
+                }).orElseGet(() -> metricsFactory -> {
+                });
     }
 
     private static Config.ConfigBuilder createBaseConfig() {
-        Config.ConfigBuilder configBuilder = Config.builder();
-        Logging logging;
-        try {
-            logging = Logging.slf4j();
-        } catch (Exception e) {
-            logging = Logging.javaUtilLogging(Level.INFO);
-        }
-        configBuilder.withLogging(logging);
-        return configBuilder;
+        return Config.builder();
     }
 
     private static void configureSsl(Config.ConfigBuilder configBuilder, Neo4jConfiguration configuration) {
@@ -192,9 +190,12 @@ public class Neo4jDriverRecorder {
         configBuilder.withConnectionAcquisitionTimeout(pool.connectionAcquisitionTimeout().toMillis(), MILLISECONDS);
 
         if (pool.metricsEnabled()) {
-            configBuilder.withDriverMetrics();
-        } else {
-            configBuilder.withoutDriverMetrics();
+            if (!HAS_DRIVER_METRICS) {
+                log.warn(
+                        "Driver metrics enabled, but module org.neo4j.driver:neo4j-java-driver-observation-metrics not provided");
+            } else {
+                configBuilder.withObservationProvider(MetricsObservationProvider.newInstance());
+            }
         }
     }
 }

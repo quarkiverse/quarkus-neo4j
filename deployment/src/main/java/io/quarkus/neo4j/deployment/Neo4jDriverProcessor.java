@@ -31,11 +31,18 @@ class Neo4jDriverProcessor {
 
     @BuildStep
     @Record(ExecutionTime.RUNTIME_INIT)
+    Neo4jDriverConfigBuildItem metricsObservationProvider(Neo4jDriverRecorder recorder) {
+        return new Neo4jDriverConfigBuildItem(recorder.buildConfig());
+    }
+
+    @BuildStep
+    @Record(ExecutionTime.RUNTIME_INIT)
     Neo4jDriverBuildItem configureDriverProducer(Neo4jDriverRecorder recorder,
+            Neo4jDriverConfigBuildItem driverConfig,
             BuildProducer<SyntheticBeanBuildItem> syntheticBeans,
             ShutdownContextBuildItem shutdownContext) {
 
-        RuntimeValue<Driver> driverHolder = recorder.initializeDriver(shutdownContext);
+        RuntimeValue<Driver> driverHolder = recorder.initializeDriver(shutdownContext, driverConfig.getValue());
         syntheticBeans
                 .produce(SyntheticBeanBuildItem.configure(Driver.class).runtimeValue(driverHolder).setRuntimeInit().done());
 
@@ -52,8 +59,9 @@ class Neo4jDriverProcessor {
     @Record(ExecutionTime.RUNTIME_INIT)
     void metrics(
             Neo4jDriverRecorder recorder,
+            Neo4jDriverConfigBuildItem driverConfig,
             BuildProducer<MetricsFactoryConsumerBuildItem> metrics) {
-        metrics.produce(new MetricsFactoryConsumerBuildItem(recorder.registerMetrics()));
+        metrics.produce(new MetricsFactoryConsumerBuildItem(recorder.registerMetrics(driverConfig.getValue())));
     }
 
     @BuildStep

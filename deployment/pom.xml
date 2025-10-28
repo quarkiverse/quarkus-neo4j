@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.quarkiverse.neo4j</groupId>
         <artifactId>quarkus-neo4j-parent</artifactId>
-        <version>6.0.1-SNAPSHOT</version>
+        <version>6.0.1</version>
     </parent>
     <artifactId>quarkus-neo4j-deployment</artifactId>
     <name>Quarkus - Neo4j - Deployment</name>

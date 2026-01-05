@@ -53,6 +53,8 @@ class Neo4jDevServicesProcessor {
     private static final String DEV_SERVICE_LABEL = "quarkus-dev-service-neo4j";
 
     private static final ContainerLocator CONTAINER_LOCATOR = new ContainerLocator(DEV_SERVICE_LABEL, DEFAULT_BOLT_PORT);
+    public static final String NEO4J_BOLT_PORT_DEV_PROP = "quarkus.neo4j.devservices.bolt-port";
+    public static final String NEO4J_HTTP_PORT_DEV_PROP = "quarkus.neo4j.devservices.http-port";
 
     @SuppressWarnings("deprecation")
     static volatile RunningDevService devService;
@@ -152,9 +154,14 @@ class Neo4jDevServicesProcessor {
 
         return CONTAINER_LOCATOR.locateContainer(configuration.serviceName(), configuration.shared(), launchMode)
                 .map(containerAddress -> {
+                    var neo4jContainer = containerAddress.getRunningContainer();
+                    var boltPort = neo4jContainer.getPortMapping(DEFAULT_BOLT_PORT).orElseThrow();
+                    var httpPort = neo4jContainer.getPortMapping(DEFAULT_HTTP_PORT).orElseThrow();
                     var config = Map.of(
                             NEO4J_URI, String.format("bolt://" + containerAddress.getUrl()),
-                            NEO4J_PASSWORD_PROP, configuration.sharedPassword());
+                            NEO4J_PASSWORD_PROP, configuration.sharedPassword(),
+                            NEO4J_BOLT_PORT_DEV_PROP, Integer.toString(boltPort),
+                            NEO4J_HTTP_PORT_DEV_PROP, Integer.toString(httpPort));
                     return new RunningDevService(Feature.NEO4J.getName(), containerAddress.getId(), null, config);
                 })
                 .orElseGet(() -> {
@@ -164,10 +171,14 @@ class Neo4jDevServicesProcessor {
                     timeout.ifPresent(neo4jContainer::withStartupTimeout);
                     neo4jContainer.start();
 
+                    var boltPort = neo4jContainer.getMappedPort(DEFAULT_BOLT_PORT);
+                    var httpPort = neo4jContainer.getMappedPort(DEFAULT_HTTP_PORT);
                     var config = Map.of(
                             NEO4J_URI, neo4jContainer.getBoltUrl(),
                             NEO4J_BROWSER_URL, neo4jContainer.getBrowserUrl(),
-                            NEO4J_PASSWORD_PROP, neo4jContainer.getAdminPassword());
+                            NEO4J_PASSWORD_PROP, neo4jContainer.getAdminPassword(),
+                            NEO4J_BOLT_PORT_DEV_PROP, Integer.toString(boltPort),
+                            NEO4J_HTTP_PORT_DEV_PROP, Integer.toString(httpPort));
 
                     log.infof("Dev Services started a Neo4j container reachable at %s", neo4jContainer.getBoltUrl());
                     log.infof("Neo4j Browser is reachable at %s", neo4jContainer.getBrowserUrl());
@@ -206,7 +217,7 @@ class Neo4jDevServicesProcessor {
             }
 
             if (useSharedNetwork) {
-                var name = ConfigureUtil.configureSharedNetwork(container, "neo4j");
+                ConfigureUtil.configureSharedNetwork(container, "neo4j");
             }
 
             if (launchMode == LaunchMode.DEVELOPMENT && config.serviceName() != null) {

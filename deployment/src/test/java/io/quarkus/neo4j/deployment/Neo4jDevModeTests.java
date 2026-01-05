@@ -12,9 +12,12 @@ import java.util.logging.LogRecord;
 
 import jakarta.inject.Inject;
 
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.exceptions.ServiceUnavailableException;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -22,6 +25,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import io.quarkus.test.QuarkusUnitTest;
 
 public class Neo4jDevModeTests {
+
+    // Let it burn when there's no free port
+    public static final String FIXED_BOLD_PORT = PortUtils.findFreePort().get().toString();
+    public static final String FIXED_HTTP_PORT = PortUtils.findFreePort().get().toString();
 
     @Testcontainers(disabledWithoutDocker = true)
     static class DevServicesShouldStartNeo4jTest {
@@ -47,6 +54,14 @@ public class Neo4jDevModeTests {
                 assertThat(apoc).isNotNull().startsWith("5.");
             }
         }
+
+        @ParameterizedTest
+        @ValueSource(strings = { "http-port", "bolt-port" })
+        public void portsShouldBeInConfig(String name) {
+            String port = ConfigProvider.getConfig().getValue("quarkus.neo4j.devservices.%s".formatted(name), String.class);
+            assertThat(port).isNotNull();
+        }
+
     }
 
     static Predicate<LogRecord> recordMatches(String message, String port) {
@@ -56,10 +71,6 @@ public class Neo4jDevModeTests {
 
     @Testcontainers(disabledWithoutDocker = true)
     static class DevServicesShouldBeAbleToUseFixedPortsTest {
-
-        // Let it burn when there's no free port
-        static final String FIXED_BOLD_PORT = PortUtils.findFreePort().get().toString();
-        static final String FIXED_HTTP_PORT = PortUtils.findFreePort().get().toString();
 
         @RegisterExtension
         static QuarkusUnitTest test = new QuarkusUnitTest()
@@ -81,6 +92,13 @@ public class Neo4jDevModeTests {
         public void shouldBeAbleToConnect() {
 
             assertThatNoException().isThrownBy(() -> driver.verifyConnectivity());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = { "http-port", "bolt-port" })
+        public void portsShouldBeInConfig(String name) {
+            String port = ConfigProvider.getConfig().getValue("quarkus.neo4j.devservices.%s".formatted(name), String.class);
+            assertThat(port).isEqualTo("http-port".equals(name) ? FIXED_HTTP_PORT : FIXED_BOLD_PORT);
         }
     }
 

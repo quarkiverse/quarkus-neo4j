@@ -33,7 +33,7 @@ public interface DevServicesBuildTimeConfig {
 
     /**
      * This value can be used to specify the port to which the bolt-port of the container is exposed. It must be a free
-     * port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be
+     * port, otherwise startup will fail. A random, free port will be used by default. Either way, a message will be
      * logged on which port the Neo4j container is reachable over bolt.
      * <p>
      * Ignored when container sharing is enabled.
@@ -44,7 +44,7 @@ public interface DevServicesBuildTimeConfig {
 
     /**
      * This value can be used to specify the port to which the http-port of the container is exposed. It must be a free
-     * port, otherwise startup will fail. A random, free port will be used by default. Either way, a messsage will be
+     * port, otherwise startup will fail. A random, free port will be used by default. Either way, a message will be
      * logged on which port the Neo4j Browser is available.
      * <p>
      * Ignored when container sharing is enabled.

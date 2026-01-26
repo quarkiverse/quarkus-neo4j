@@ -38,9 +38,9 @@
 			<groupId>org.neo4j.driver</groupId>
 			<artifactId>neo4j-java-driver-observation-metrics</artifactId>
 		</dependency>
-		<dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-smallrye-metrics-deployment</artifactId>
+            <artifactId>quarkus-micrometer-registry-prometheus</artifactId>
         </dependency>
 
         <!-- test dependencies -->

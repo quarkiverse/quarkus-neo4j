@@ -3,20 +3,21 @@ package io.quarkus.it.neo4j;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.matchesRegex;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jakarta.ws.rs.core.Response.Status;
 
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -180,20 +181,19 @@ public class Neo4jFunctionalityTest {
     }
 
     @Test
-    public void metrics() {
+    public void metrics() throws IOException {
         RestAssured.given().when().get("/neo4j/blocking").then().body(is("OK"));
-        assertMetricValue("neo4j.acquired", greaterThan(0));
-        assertMetricValue("neo4j.created", greaterThan(0));
-        assertMetricValue("neo4j.totalAcquisitionTime", greaterThan(0));
-        assertMetricValue("neo4j.totalConnectionTime", greaterThan(0));
-        assertMetricValue("neo4j.totalInUseTime", greaterThan(0));
-    }
 
-    private void assertMetricValue(String name, Matcher<Integer> valueMatcher) {
-        RestAssured
-                .given().accept(ContentType.JSON)
-                .when().get("/q/metrics/vendor/" + name)
-                .then()
-                .body("'" + name + "'", valueMatcher);
+        try (var body = new BufferedReader(new InputStreamReader(RestAssured
+                .given().accept(ContentType.TEXT)
+                .when().get("/q/metrics")
+                .then().extract().body().asInputStream())).lines()) {
+            var lines = body.toList();
+            lines.forEach(System.out::println);
+            for (var metric : new String[] { "acquired", "created", "totalAcquisitionTime", "totalConnectionTime",
+                    "totalInUseTime" }) {
+                assertTrue(lines.stream().anyMatch(l -> l.matches("neo4j_%s_total \\d+.\\d+".formatted(metric))));
+            }
+        }
     }
 }

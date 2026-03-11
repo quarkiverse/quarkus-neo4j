@@ -7,7 +7,7 @@ h|[.header-title]##Configuration property##
 h|Type
 h|Default
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-health-enabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-health-enabled[`quarkus.neo4j.health.enabled`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-health-enabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-health-enabled[`+++quarkus.neo4j.health.enabled+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.health.enabled+++[]
 endif::add-copy-button-to-config-props[]
@@ -28,7 +28,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++true+++`
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-enabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-enabled[`quarkus.neo4j.devservices.enabled`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-enabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-enabled[`+++quarkus.neo4j.devservices.enabled+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.devservices.enabled+++[]
 endif::add-copy-button-to-config-props[]
@@ -49,7 +49,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-image-name]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-image-name[`quarkus.neo4j.devservices.image-name`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-image-name]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-image-name[`+++quarkus.neo4j.devservices.image-name+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.devservices.image-name+++[]
 endif::add-copy-button-to-config-props[]
@@ -70,7 +70,7 @@ endif::add-copy-button-to-env-var[]
 |string
 |`+++neo4j:5+++`
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env[`quarkus.neo4j.devservices.additional-env."additional-env"`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-additional-env-additional-env[`+++quarkus.neo4j.devservices.additional-env."additional-env"+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.devservices.additional-env."additional-env"+++[]
 endif::add-copy-button-to-config-props[]
@@ -91,7 +91,7 @@ endif::add-copy-button-to-env-var[]
 |Map<String,String>
 |
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-bolt-port]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-bolt-port[`quarkus.neo4j.devservices.bolt-port`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-bolt-port]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-bolt-port[`+++quarkus.neo4j.devservices.bolt-port+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.devservices.bolt-port+++[]
 endif::add-copy-button-to-config-props[]
@@ -114,7 +114,7 @@ endif::add-copy-button-to-env-var[]
 |int
 |
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-http-port]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-http-port[`quarkus.neo4j.devservices.http-port`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-http-port]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-http-port[`+++quarkus.neo4j.devservices.http-port+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.devservices.http-port+++[]
 endif::add-copy-button-to-config-props[]
@@ -137,7 +137,7 @@ endif::add-copy-button-to-env-var[]
 |int
 |
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-shared]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-shared[`quarkus.neo4j.devservices.shared`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-shared]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-shared[`+++quarkus.neo4j.devservices.shared+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.devservices.shared+++[]
 endif::add-copy-button-to-config-props[]
@@ -162,7 +162,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++false+++`
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-service-name]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-service-name[`quarkus.neo4j.devservices.service-name`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-service-name]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-service-name[`+++quarkus.neo4j.devservices.service-name+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.devservices.service-name+++[]
 endif::add-copy-button-to-config-props[]
@@ -185,7 +185,7 @@ endif::add-copy-button-to-env-var[]
 |string
 |`+++neo4j+++`
 
-a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-shared-password]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-shared-password[`quarkus.neo4j.devservices.shared-password`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-neo4j_quarkus-neo4j-devservices-shared-password]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-devservices-shared-password[`+++quarkus.neo4j.devservices.shared-password+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.devservices.shared-password+++[]
 endif::add-copy-button-to-config-props[]
@@ -206,7 +206,7 @@ endif::add-copy-button-to-env-var[]
 |string
 |`+++verysecret+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-uri]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-uri[`quarkus.neo4j.uri`]##
+a| [[quarkus-neo4j_quarkus-neo4j-uri]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-uri[`+++quarkus.neo4j.uri+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.uri+++[]
 endif::add-copy-button-to-config-props[]
@@ -227,7 +227,7 @@ endif::add-copy-button-to-env-var[]
 |string
 |`+++bolt://localhost:7687+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-encrypted]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-encrypted[`quarkus.neo4j.encrypted`]##
+a| [[quarkus-neo4j_quarkus-neo4j-encrypted]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-encrypted[`+++quarkus.neo4j.encrypted+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.encrypted+++[]
 endif::add-copy-button-to-config-props[]
@@ -248,7 +248,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++false+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-max-transaction-retry-time]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-max-transaction-retry-time[`quarkus.neo4j.max-transaction-retry-time`]##
+a| [[quarkus-neo4j_quarkus-neo4j-max-transaction-retry-time]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-max-transaction-retry-time[`+++quarkus.neo4j.max-transaction-retry-time+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.max-transaction-retry-time+++[]
 endif::add-copy-button-to-config-props[]
@@ -273,7 +273,7 @@ h|[[quarkus-neo4j_section_quarkus-neo4j-authentication]] [.section-name.section-
 h|Type
 h|Default
 
-a| [[quarkus-neo4j_quarkus-neo4j-authentication-username]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-username[`quarkus.neo4j.authentication.username`]##
+a| [[quarkus-neo4j_quarkus-neo4j-authentication-username]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-username[`+++quarkus.neo4j.authentication.username+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.authentication.username+++[]
 endif::add-copy-button-to-config-props[]
@@ -294,7 +294,7 @@ endif::add-copy-button-to-env-var[]
 |string
 |`+++neo4j+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-authentication-password]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-password[`quarkus.neo4j.authentication.password`]##
+a| [[quarkus-neo4j_quarkus-neo4j-authentication-password]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-password[`+++quarkus.neo4j.authentication.password+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.authentication.password+++[]
 endif::add-copy-button-to-config-props[]
@@ -315,7 +315,7 @@ endif::add-copy-button-to-env-var[]
 |string
 |`+++neo4j+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-authentication-disabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-disabled[`quarkus.neo4j.authentication.disabled`]##
+a| [[quarkus-neo4j_quarkus-neo4j-authentication-disabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-disabled[`+++quarkus.neo4j.authentication.disabled+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.authentication.disabled+++[]
 endif::add-copy-button-to-config-props[]
@@ -336,7 +336,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++false+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-authentication-value]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-value[`quarkus.neo4j.authentication.value`]##
+a| [[quarkus-neo4j_quarkus-neo4j-authentication-value]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-authentication-value[`+++quarkus.neo4j.authentication.value+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.authentication.value+++[]
 endif::add-copy-button-to-config-props[]
@@ -362,7 +362,7 @@ h|[[quarkus-neo4j_section_quarkus-neo4j-trust-settings]] [.section-name.section-
 h|Type
 h|Default
 
-a| [[quarkus-neo4j_quarkus-neo4j-trust-settings-strategy]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-trust-settings-strategy[`quarkus.neo4j.trust-settings.strategy`]##
+a| [[quarkus-neo4j_quarkus-neo4j-trust-settings-strategy]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-trust-settings-strategy[`+++quarkus.neo4j.trust-settings.strategy+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.trust-settings.strategy+++[]
 endif::add-copy-button-to-config-props[]
@@ -383,7 +383,7 @@ endif::add-copy-button-to-env-var[]
 a|`trust-all-certificates`, `trust-custom-ca-signed-certificates`, `trust-system-ca-signed-certificates`
 |`+++trust-system-ca-signed-certificates+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-trust-settings-cert-file]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-trust-settings-cert-file[`quarkus.neo4j.trust-settings.cert-file`]##
+a| [[quarkus-neo4j_quarkus-neo4j-trust-settings-cert-file]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-trust-settings-cert-file[`+++quarkus.neo4j.trust-settings.cert-file+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.trust-settings.cert-file+++[]
 endif::add-copy-button-to-config-props[]
@@ -404,7 +404,7 @@ endif::add-copy-button-to-env-var[]
 |path
 |
 
-a| [[quarkus-neo4j_quarkus-neo4j-trust-settings-hostname-verification-enabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-trust-settings-hostname-verification-enabled[`quarkus.neo4j.trust-settings.hostname-verification-enabled`]##
+a| [[quarkus-neo4j_quarkus-neo4j-trust-settings-hostname-verification-enabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-trust-settings-hostname-verification-enabled[`+++quarkus.neo4j.trust-settings.hostname-verification-enabled+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.trust-settings.hostname-verification-enabled+++[]
 endif::add-copy-button-to-config-props[]
@@ -430,7 +430,7 @@ h|[[quarkus-neo4j_section_quarkus-neo4j-pool]] [.section-name.section-level0]##l
 h|Type
 h|Default
 
-a| [[quarkus-neo4j_quarkus-neo4j-pool-metrics-enabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-metrics-enabled[`quarkus.neo4j.pool.metrics.enabled`]##
+a| [[quarkus-neo4j_quarkus-neo4j-pool-metrics-enabled]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-metrics-enabled[`+++quarkus.neo4j.pool.metrics.enabled+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.pool.metrics.enabled+++[]
 endif::add-copy-button-to-config-props[]
@@ -451,7 +451,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++false+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-pool-log-leaked-sessions]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-log-leaked-sessions[`quarkus.neo4j.pool.log-leaked-sessions`]##
+a| [[quarkus-neo4j_quarkus-neo4j-pool-log-leaked-sessions]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-log-leaked-sessions[`+++quarkus.neo4j.pool.log-leaked-sessions+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.pool.log-leaked-sessions+++[]
 endif::add-copy-button-to-config-props[]
@@ -472,7 +472,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++false+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-pool-max-connection-pool-size]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-max-connection-pool-size[`quarkus.neo4j.pool.max-connection-pool-size`]##
+a| [[quarkus-neo4j_quarkus-neo4j-pool-max-connection-pool-size]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-max-connection-pool-size[`+++quarkus.neo4j.pool.max-connection-pool-size+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.pool.max-connection-pool-size+++[]
 endif::add-copy-button-to-config-props[]
@@ -493,7 +493,7 @@ endif::add-copy-button-to-env-var[]
 |int
 |`+++100+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-pool-idle-time-before-connection-test]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-idle-time-before-connection-test[`quarkus.neo4j.pool.idle-time-before-connection-test`]##
+a| [[quarkus-neo4j_quarkus-neo4j-pool-idle-time-before-connection-test]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-idle-time-before-connection-test[`+++quarkus.neo4j.pool.idle-time-before-connection-test+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.pool.idle-time-before-connection-test+++[]
 endif::add-copy-button-to-config-props[]
@@ -514,7 +514,7 @@ endif::add-copy-button-to-env-var[]
 |link:https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html[Duration] link:#duration-note-anchor-quarkus-neo4j_quarkus-neo4j[icon:question-circle[title=More information about the Duration format]]
 |`+++-0.001S+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-pool-max-connection-lifetime]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-max-connection-lifetime[`quarkus.neo4j.pool.max-connection-lifetime`]##
+a| [[quarkus-neo4j_quarkus-neo4j-pool-max-connection-lifetime]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-max-connection-lifetime[`+++quarkus.neo4j.pool.max-connection-lifetime+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.pool.max-connection-lifetime+++[]
 endif::add-copy-button-to-config-props[]
@@ -535,7 +535,7 @@ endif::add-copy-button-to-env-var[]
 |link:https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html[Duration] link:#duration-note-anchor-quarkus-neo4j_quarkus-neo4j[icon:question-circle[title=More information about the Duration format]]
 |`+++1H+++`
 
-a| [[quarkus-neo4j_quarkus-neo4j-pool-connection-acquisition-timeout]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-connection-acquisition-timeout[`quarkus.neo4j.pool.connection-acquisition-timeout`]##
+a| [[quarkus-neo4j_quarkus-neo4j-pool-connection-acquisition-timeout]] [.property-path]##link:#quarkus-neo4j_quarkus-neo4j-pool-connection-acquisition-timeout[`+++quarkus.neo4j.pool.connection-acquisition-timeout+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.neo4j.pool.connection-acquisition-timeout+++[]
 endif::add-copy-button-to-config-props[]

@@ -10,13 +10,7 @@
     <name>Quarkus - Neo4j - Integration Tests</name>
         <description>Module that contains Neo4j related tests running with the Neo4j database</description>
 
-    <properties>
-        <neo4j.uri>bolt://localhost:60513</neo4j.uri>
-        <neo4j.username>neo4j</neo4j.username>
-        <neo4j.password>verysecret</neo4j.password>
-    </properties>
-
-    <dependencies>
+<dependencies>
 
         <dependency>
             <groupId>io.quarkiverse.neo4j</groupId>
@@ -83,65 +77,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.48.1</version>
-                <configuration>
-                    <images>
-                        <image>
-                            <name>neo4j:5</name>
-                            <run>
-                                <ports>
-                                    <port>60513:7687</port>
-                                </ports>
-                                <env>
-                                    <NEO4J_AUTH>neo4j/${neo4j.password}</NEO4J_AUTH>
-                                    <NEO4J_dbms_memory_pagecache_size>10M</NEO4J_dbms_memory_pagecache_size>
-                                    <NEO4J_dbms_memory_heap_initial__size>10M</NEO4J_dbms_memory_heap_initial__size>
-                                </env>
-                                <log>
-                                    <prefix>Neo4j:</prefix>
-                                    <date>default</date>
-                                    <color>cyan</color>
-                                </log>
-                                <wait>
-                                    <log>.*Started\.</log>
-                                    <time>40000</time>
-                                </wait>
-                            </run>
-                        </image>
-                    </images>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>docker-start</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>stop</goal>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>docker-stop</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <environmentVariables combine.self="append">
-                        <QUARKUS_NEO4J_AUTHENTICATION_USERNAME>${neo4j.username}</QUARKUS_NEO4J_AUTHENTICATION_USERNAME>
-                        <QUARKUS_NEO4J_AUTHENTICATION_PASSWORD>${neo4j.password}</QUARKUS_NEO4J_AUTHENTICATION_PASSWORD>
-                        <QUARKUS_NEO4J_URI>${neo4j.uri}</QUARKUS_NEO4J_URI>
-                    </environmentVariables>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
@@ -169,11 +104,6 @@
                                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                         <maven.home>${maven.home}</maven.home>
                                     </systemPropertyVariables>
-                                    <environmentVariables combine.self="append">
-                                        <QUARKUS_NEO4J_AUTHENTICATION_USERNAME>${neo4j.username}</QUARKUS_NEO4J_AUTHENTICATION_USERNAME>
-                                        <QUARKUS_NEO4J_AUTHENTICATION_PASSWORD>${neo4j.password}</QUARKUS_NEO4J_AUTHENTICATION_PASSWORD>
-                                        <QUARKUS_NEO4J_URI>${neo4j.uri}</QUARKUS_NEO4J_URI>
-                                    </environmentVariables>
                                 </configuration>
                             </execution>
                         </executions>

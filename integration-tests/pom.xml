@@ -74,6 +74,7 @@
             <plugin>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
+                <extensions>true</extensions>
                 <executions>
                     <execution>
                         <goals>
@@ -130,6 +131,17 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <environmentVariables combine.self="append">
+                        <QUARKUS_NEO4J_AUTHENTICATION_USERNAME>${neo4j.username}</QUARKUS_NEO4J_AUTHENTICATION_USERNAME>
+                        <QUARKUS_NEO4J_AUTHENTICATION_PASSWORD>${neo4j.password}</QUARKUS_NEO4J_AUTHENTICATION_PASSWORD>
+                        <QUARKUS_NEO4J_URI>${neo4j.uri}</QUARKUS_NEO4J_URI>
+                    </environmentVariables>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -157,6 +169,11 @@
                                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                         <maven.home>${maven.home}</maven.home>
                                     </systemPropertyVariables>
+                                    <environmentVariables combine.self="append">
+                                        <QUARKUS_NEO4J_AUTHENTICATION_USERNAME>${neo4j.username}</QUARKUS_NEO4J_AUTHENTICATION_USERNAME>
+                                        <QUARKUS_NEO4J_AUTHENTICATION_PASSWORD>${neo4j.password}</QUARKUS_NEO4J_AUTHENTICATION_PASSWORD>
+                                        <QUARKUS_NEO4J_URI>${neo4j.uri}</QUARKUS_NEO4J_URI>
+                                    </environmentVariables>
                                 </configuration>
                             </execution>
                         </executions>

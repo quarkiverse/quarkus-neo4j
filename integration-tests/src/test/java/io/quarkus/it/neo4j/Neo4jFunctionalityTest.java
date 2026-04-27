@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,21 +45,14 @@ public class Neo4jFunctionalityTest {
     private String apfelId;
 
     @BeforeAll
-    public static void connectDriver() throws IOException {
+    public static void connectDriver() {
 
-        var properties = new Properties();
-        properties.load(Neo4jFunctionalityTest.class.getResourceAsStream("/application.properties"));
-        var defaultUri = "bolt://localhost:7687";
-        var uri = properties.getProperty("quarkus.neo4j.uri", defaultUri);
-        if (uri.startsWith("$")) {
-            uri = defaultUri;
-        }
-        var defaultPassword = "secret";
-        var password = properties.getProperty("quarkus.neo4j.authentication.password", defaultPassword);
-        if (uri.startsWith("$")) {
-            password = defaultPassword;
-        }
-        driver = GraphDatabase.driver(uri, AuthTokens.basic("neo4j", password));
+        var env = System.getenv();
+        var uri = env.getOrDefault("QUARKUS_NEO4J_URI", "bolt://localhost:7687");
+        var password = env.getOrDefault("QUARKUS_NEO4J_AUTHENTICATION_PASSWORD", "neo4j");
+        var username = env.getOrDefault("QUARKUS_NEO4J_AUTHENTICATION_USERNAME", "neo4j");
+
+        driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
     }
 
     @AfterAll

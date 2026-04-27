@@ -10,5 +10,6 @@ metadata:
   categories:
   - "data"
   guide: https://quarkiverse.github.io/quarkiverse-docs/quarkus-neo4j/dev/index.html
+  lib-ga: org.neo4j.driver:neo4j-java-driver[https://neo4j.com/docs/java-manual/current/]
   config:
   - "quarkus.neo4j."

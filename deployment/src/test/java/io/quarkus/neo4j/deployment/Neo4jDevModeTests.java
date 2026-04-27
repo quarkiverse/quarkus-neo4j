@@ -22,7 +22,7 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.exceptions.ServiceUnavailableException;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import io.quarkus.test.QuarkusUnitTest;
+import io.quarkus.test.QuarkusExtensionTest;
 
 public class Neo4jDevModeTests {
 
@@ -34,7 +34,7 @@ public class Neo4jDevModeTests {
     static class DevServicesShouldStartNeo4jTest {
 
         @RegisterExtension
-        static QuarkusUnitTest test = new QuarkusUnitTest()
+        static QuarkusExtensionTest test = new QuarkusExtensionTest()
                 .withEmptyApplication()
                 .withConfigurationResource("application.properties")
                 .overrideConfigKey("quarkus.neo4j.devservices.additional-env.NEO4J_PLUGINS", "[\"apoc\"]")
@@ -73,7 +73,7 @@ public class Neo4jDevModeTests {
     static class DevServicesShouldBeAbleToUseFixedPortsTest {
 
         @RegisterExtension
-        static QuarkusUnitTest test = new QuarkusUnitTest()
+        static QuarkusExtensionTest test = new QuarkusExtensionTest()
                 .withEmptyApplication()
                 .withConfigurationResource("application.properties")
                 .overrideConfigKey("quarkus.neo4j.devservices.bolt-port", FIXED_BOLD_PORT)
@@ -132,7 +132,7 @@ public class Neo4jDevModeTests {
         }
 
         @RegisterExtension
-        static QuarkusUnitTest test = new QuarkusUnitTest()
+        static QuarkusExtensionTest test = new QuarkusExtensionTest()
                 .withEmptyApplication()
                 .withConfigurationResource("application.properties")
                 .setBeforeAllCustomizer(DevServicesShouldNotFailWhen7474IsUsedTest::block7474)
@@ -156,7 +156,7 @@ public class Neo4jDevModeTests {
     static class WorkingWithDifferentImageAndAdditionalEnvTest {
 
         @RegisterExtension
-        static QuarkusUnitTest test = new QuarkusUnitTest()
+        static QuarkusExtensionTest test = new QuarkusExtensionTest()
                 .withEmptyApplication()
                 .setLogRecordPredicate(record -> true)
                 .withConfigurationResource("application.properties")
@@ -183,7 +183,7 @@ public class Neo4jDevModeTests {
     static class WithLocallyDisabledDevServicesTest {
 
         @RegisterExtension
-        static QuarkusUnitTest test = new QuarkusUnitTest()
+        static QuarkusExtensionTest test = new QuarkusExtensionTest()
                 .withEmptyApplication()
                 .setLogRecordPredicate(record -> true)
                 .withConfigurationResource("application.properties")
@@ -204,7 +204,7 @@ public class Neo4jDevModeTests {
     static class WithGloballyDisabledDevServicesTest {
 
         @RegisterExtension
-        static QuarkusUnitTest test = new QuarkusUnitTest()
+        static QuarkusExtensionTest test = new QuarkusExtensionTest()
                 .withEmptyApplication()
                 .setLogRecordPredicate(record -> true)
                 .withConfigurationResource("application.properties")
@@ -229,7 +229,7 @@ public class Neo4jDevModeTests {
         }
 
         @RegisterExtension
-        static QuarkusUnitTest test = new QuarkusUnitTest()
+        static QuarkusExtensionTest test = new QuarkusExtensionTest()
                 .withEmptyApplication()
                 .setLogRecordPredicate(record -> true)
                 .withConfigurationResource("application.properties")

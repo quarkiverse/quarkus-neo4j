@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import jakarta.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,14 +30,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
-/**
- * Test connecting via Neo4j Java-Driver to Neo4j.
- * Can quickly start a matching database with:
- *
- * <pre>
- *     docker run --publish=7474:7474 --publish=7687:7687 -e 'NEO4J_AUTH=neo4j/secret' neo4j:4.4
- * </pre>
- */
 @QuarkusTest
 public class Neo4jFunctionalityTest {
 
@@ -47,10 +40,10 @@ public class Neo4jFunctionalityTest {
     @BeforeAll
     public static void connectDriver() {
 
-        var env = System.getenv();
-        var uri = env.getOrDefault("QUARKUS_NEO4J_URI", "bolt://localhost:7687");
-        var password = env.getOrDefault("QUARKUS_NEO4J_AUTHENTICATION_PASSWORD", "neo4j");
-        var username = env.getOrDefault("QUARKUS_NEO4J_AUTHENTICATION_USERNAME", "neo4j");
+        var config = ConfigProvider.getConfig();
+        var uri = config.getValue("quarkus.neo4j.uri", String.class);
+        var password = config.getValue("quarkus.neo4j.authentication.password", String.class);
+        var username = config.getOptionalValue("quarkus.neo4j.authentication.username", String.class).orElse("neo4j");
 
         driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
     }

@@ -1,7 +1,5 @@
 package io.quarkus.neo4j.deployment;
 
-import static io.quarkus.devservices.common.ConfigureUtil.configureSharedServiceLabel;
-
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
@@ -10,8 +8,8 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 import org.jboss.logging.Logger;
-import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.images.builder.Transferable;
+import org.testcontainers.neo4j.Neo4jContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
@@ -159,7 +157,7 @@ class Neo4jDevServicesProcessor {
                 .orElse(null);
     }
 
-    static final class ExtNeo4jContainer extends Neo4jContainer<ExtNeo4jContainer>
+    static final class ExtNeo4jContainer extends Neo4jContainer
             implements Startable {
 
         private final OptionalInt fixedBoltPort;
@@ -184,7 +182,10 @@ class Neo4jDevServicesProcessor {
         }
 
         public ExtNeo4jContainer withSharedServiceLabel(LaunchMode launchMode, String serviceName) {
-            return configureSharedServiceLabel(this, launchMode, DEV_SERVICE_LABEL, serviceName);
+            if (ConfigureUtil.shouldConfigureSharedServiceLabel(launchMode)) {
+                withLabel(DEV_SERVICE_LABEL, serviceName);
+            }
+            return this;
         }
 
         @Override

@@ -1,35 +1,26 @@
 package io.quarkus.neo4j.deployment;
 
-import java.util.List;
-
 import io.quarkus.deployment.IsDevelopment;
 import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
+import io.quarkus.devui.spi.JsonRPCProvidersBuildItem;
 import io.quarkus.devui.spi.page.CardPageBuildItem;
 import io.quarkus.devui.spi.page.Page;
+import io.quarkus.neo4j.runtime.devui.Neo4jDevUIJsonRpcService;
 
 class Neo4jDevUiConsoleProcessor {
 
     @BuildStep(onlyIf = IsDevelopment.class)
-    CardPageBuildItem create(
-            List<DevServicesResultBuildItem> runningDevServices,
-            Neo4jBuildTimeConfig neo4jBuildTimeConfig) {
-
+    CardPageBuildItem create() {
         var cardPageBuildItem = new CardPageBuildItem();
-        if (Neo4jDevServicesProcessor.enabled(neo4jBuildTimeConfig.devservices())) {
-
-            // Find the appropriate config
-            for (DevServicesResultBuildItem runningDevService : runningDevServices) {
-                if (runningDevService.getConfig().containsKey(Neo4jDevServicesProcessor.NEO4J_BROWSER_URL)) {
-                    cardPageBuildItem.addPage(Page.externalPageBuilder("Neo4J Browser")
-                            .icon("font-awesome-solid:diagram-project")
-                            .url(runningDevService.getConfig().get(Neo4jDevServicesProcessor.NEO4J_BROWSER_URL))
-                            .doNotEmbed());
-                    break;
-                }
-            }
-        }
-
+        cardPageBuildItem.addPage(Page.externalPageBuilder("Neo4j Browser")
+                .icon("font-awesome-solid:diagram-project")
+                .dynamicUrlJsonRPCMethodName("getBrowserUrl")
+                .doNotEmbed());
         return cardPageBuildItem;
+    }
+
+    @BuildStep(onlyIf = IsDevelopment.class)
+    JsonRPCProvidersBuildItem createJsonRPCService() {
+        return new JsonRPCProvidersBuildItem(Neo4jDevUIJsonRpcService.class);
     }
 }

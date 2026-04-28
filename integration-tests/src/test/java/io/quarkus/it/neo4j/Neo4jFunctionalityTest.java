@@ -18,51 +18,43 @@ import java.util.stream.Stream;
 import jakarta.ws.rs.core.Response.Status;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 
+import io.quarkus.test.common.DevServicesContext;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
-/**
- * Test connecting via Neo4j Java-Driver to Neo4j.
- * Can quickly start a matching database with:
- *
- * <pre>
- *     docker run --publish=7474:7474 --publish=7687:7687 -e 'NEO4J_AUTH=neo4j/secret' neo4j:4.4
- * </pre>
- */
 @QuarkusTest
 public class Neo4jFunctionalityTest {
 
     static Driver driver;
 
+    DevServicesContext devServicesContext;
+
     private String apfelId;
-
-    @BeforeAll
-    public static void connectDriver() {
-
-        var env = System.getenv();
-        var uri = env.getOrDefault("QUARKUS_NEO4J_URI", "bolt://localhost:7687");
-        var password = env.getOrDefault("QUARKUS_NEO4J_AUTHENTICATION_PASSWORD", "neo4j");
-        var username = env.getOrDefault("QUARKUS_NEO4J_AUTHENTICATION_USERNAME", "neo4j");
-
-        driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
-    }
 
     @AfterAll
     public static void closeDriver() {
-
-        driver.close();
+        if (driver != null) {
+            driver.close();
+        }
     }
 
     @BeforeEach
     public void prepareFruits() {
+
+        if (driver == null) {
+            var props = devServicesContext.devServicesProperties();
+            var uri = props.get("quarkus.neo4j.uri");
+            var password = props.getOrDefault("quarkus.neo4j.authentication.password", "neo4j");
+            var username = props.getOrDefault("quarkus.neo4j.authentication.username", "neo4j");
+            driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
+        }
 
         try (var session = driver.session()) {
 

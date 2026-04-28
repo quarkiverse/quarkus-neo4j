@@ -17,15 +17,14 @@ import java.util.stream.Stream;
 
 import jakarta.ws.rs.core.Response.Status;
 
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 
+import io.quarkus.test.common.DevServicesContext;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -35,27 +34,27 @@ public class Neo4jFunctionalityTest {
 
     static Driver driver;
 
+    DevServicesContext devServicesContext;
+
     private String apfelId;
-
-    @BeforeAll
-    public static void connectDriver() {
-
-        var config = ConfigProvider.getConfig();
-        var uri = config.getValue("quarkus.neo4j.uri", String.class);
-        var password = config.getValue("quarkus.neo4j.authentication.password", String.class);
-        var username = config.getOptionalValue("quarkus.neo4j.authentication.username", String.class).orElse("neo4j");
-
-        driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
-    }
 
     @AfterAll
     public static void closeDriver() {
-
-        driver.close();
+        if (driver != null) {
+            driver.close();
+        }
     }
 
     @BeforeEach
     public void prepareFruits() {
+
+        if (driver == null) {
+            var props = devServicesContext.devServicesProperties();
+            var uri = props.get("quarkus.neo4j.uri");
+            var password = props.getOrDefault("quarkus.neo4j.authentication.password", "neo4j");
+            var username = props.getOrDefault("quarkus.neo4j.authentication.username", "neo4j");
+            driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
+        }
 
         try (var session = driver.session()) {
 

@@ -6,7 +6,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
 
 import io.smallrye.common.annotation.NonBlocking;
 
-public class Neo4jDevUIJsonRpcService {
+public final class Neo4jDevUIJsonRpcService {
 
     @NonBlocking
     public String getBrowserUrl() {

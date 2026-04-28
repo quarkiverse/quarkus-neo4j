@@ -27,8 +27,8 @@ import io.quarkus.test.QuarkusExtensionTest;
 public class Neo4jDevModeTests {
 
     // Let it burn when there's no free port
-    public static final String FIXED_BOLD_PORT = PortUtils.findFreePort().get().toString();
-    public static final String FIXED_HTTP_PORT = PortUtils.findFreePort().get().toString();
+    public static final String FIXED_BOLD_PORT = PortUtils.findFreePort().orElseThrow().toString();
+    public static final String FIXED_HTTP_PORT = PortUtils.findFreePort().orElseThrow().toString();
 
     @Testcontainers(disabledWithoutDocker = true)
     static class DevServicesShouldStartNeo4jTest {

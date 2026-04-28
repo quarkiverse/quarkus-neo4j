@@ -76,9 +76,9 @@ class Neo4jDevServicesProcessor {
             return;
         }
 
-        var boldIsReachable = Boolean.getBoolean("io.quarkus.neo4j.deployment.devservices.assumeBoltIsReachable")
+        var boltIsReachable = Boolean.getBoolean("io.quarkus.neo4j.deployment.devservices.assumeBoltIsReachable")
                 || new BoltHandshaker("localhost", DEFAULT_BOLT_PORT).isBoltPortReachable(Duration.ofSeconds(5));
-        if (boldIsReachable && configuration.fixedBoltPort.orElse(-1) == DEFAULT_BOLT_PORT) {
+        if (boltIsReachable && configuration.fixedBoltPort.orElse(-1) == DEFAULT_BOLT_PORT) {
             log.warn("Not starting Dev Services for Neo4j, as the configuration requests the same fixed bolt port.");
             return;
         }

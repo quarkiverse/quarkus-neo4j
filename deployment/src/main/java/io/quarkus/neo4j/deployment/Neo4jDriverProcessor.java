@@ -13,6 +13,7 @@ import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedPackageBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.ServiceProviderBuildItem;
 import io.quarkus.deployment.metrics.MetricsFactoryConsumerBuildItem;
 import io.quarkus.neo4j.runtime.Neo4jDriverRecorder;
 import io.quarkus.runtime.RuntimeValue;
@@ -62,6 +63,18 @@ class Neo4jDriverProcessor {
             Neo4jDriverConfigBuildItem driverConfig,
             BuildProducer<MetricsFactoryConsumerBuildItem> metrics) {
         metrics.produce(new MetricsFactoryConsumerBuildItem(recorder.registerMetrics(driverConfig.getValue())));
+    }
+
+    @BuildStep
+    void registerBoltCodecServiceProviders(BuildProducer<ServiceProviderBuildItem> serviceProviders) {
+        serviceProviders.produce(ServiceProviderBuildItem.allProvidersFromClassPath(
+                "org.neo4j.bolt.connection.codec.value_encoding.ValueEncoderFactory"));
+        serviceProviders.produce(ServiceProviderBuildItem.allProvidersFromClassPath(
+                "org.neo4j.bolt.connection.codec.value_encoding.ValueDecoderFactory"));
+        serviceProviders.produce(ServiceProviderBuildItem.allProvidersFromClassPath(
+                "org.neo4j.bolt.connection.codec.packstream.PackStreamEncoderFactory"));
+        serviceProviders.produce(ServiceProviderBuildItem.allProvidersFromClassPath(
+                "org.neo4j.bolt.connection.codec.packstream.PackStreamDecoderFactory"));
     }
 
     @BuildStep

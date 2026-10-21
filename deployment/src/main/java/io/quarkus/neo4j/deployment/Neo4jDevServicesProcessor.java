@@ -2,6 +2,7 @@ package io.quarkus.neo4j.deployment;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import io.quarkus.deployment.builditem.Startable;
 import io.quarkus.deployment.dev.devservices.DevServicesConfig;
 import io.quarkus.devservices.common.ComposeLocator;
 import io.quarkus.devservices.common.ConfigureUtil;
+import io.quarkus.devservices.common.ContainerAddress;
 import io.quarkus.devservices.common.ContainerLocator;
 import io.quarkus.runtime.LaunchMode;
 import io.quarkus.runtime.configuration.ConfigUtils;
@@ -41,6 +43,8 @@ class Neo4jDevServicesProcessor {
     private static final String NEO4J_URI = "quarkus.neo4j.uri";
     private static final String NEO4J_USER_PROP = "quarkus.neo4j.authentication.username";
     private static final String NEO4J_PASSWORD_PROP = "quarkus.neo4j.authentication.password";
+    private static final String NEO4J_BOLT_PORT_DEV_PROP = "quarkus.neo4j.devservices.bolt-port";
+    private static final String NEO4J_HTTP_PORT_DEV_PROP = "quarkus.neo4j.devservices.http-port";
     static final int DEFAULT_HTTP_PORT = 7474;
     static final int DEFAULT_BOLT_PORT = 7687;
 
@@ -116,10 +120,8 @@ class Neo4jDevServicesProcessor {
                 .configProvider(Map.of(
                         NEO4J_URI, container -> "bolt://" + container.getHost() + ":" + container.getBoltPort(),
                         NEO4J_PASSWORD_PROP, ExtNeo4jContainer::getAdminPassword,
-                        "quarkus.neo4j.devservices.bolt-port",
-                        container -> Integer.toString(container.getBoltPort()),
-                        "quarkus.neo4j.devservices.http-port",
-                        container -> Integer.toString(container.getHttpPort())))
+                        NEO4J_BOLT_PORT_DEV_PROP, container -> Integer.toString(container.getBoltPort()),
+                        NEO4J_HTTP_PORT_DEV_PROP, container -> Integer.toString(container.getHttpPort())))
                 .postStartHook(container -> {
                     log.infof("Dev Services started a Neo4j container reachable at %s",
                             container.getConnectionInfo());
@@ -138,23 +140,36 @@ class Neo4jDevServicesProcessor {
             LaunchMode launchMode,
             boolean useSharedNetwork) {
 
+        // The label based locator does not inspect the container, so there is no RunningContainer to read the
+        // http port from. It always connects via the Docker host and the published ports, though.
         return CONTAINER_LOCATOR.locateContainer(configuration.serviceName, configuration.shared, launchMode)
+                .map(containerAddress -> discovered(containerAddress, configuration,
+                        CONTAINER_LOCATOR.locatePublicPort(configuration.serviceName, configuration.shared, launchMode,
+                                DEFAULT_HTTP_PORT)))
                 .or(() -> ComposeLocator.locateContainer(composeProjectBuildItem,
                         List.of(configuration.imageName, "neo4j"),
-                        DEFAULT_BOLT_PORT, launchMode, useSharedNetwork))
-                .map(containerAddress -> {
-                    var boltPort = containerAddress.getPort();
-                    return DevServicesResultBuildItem.discovered()
-                            .feature(Feature.NEO4J)
-                            .containerId(containerAddress.getId())
-                            .config(Map.of(
-                                    NEO4J_URI,
-                                    String.format("bolt://%s", containerAddress.getUrl()),
-                                    NEO4J_PASSWORD_PROP, configuration.sharedPassword,
-                                    "quarkus.neo4j.devservices.bolt-port", Integer.toString(boltPort)))
-                            .build();
-                })
+                        DEFAULT_BOLT_PORT, launchMode, useSharedNetwork)
+                        .map(containerAddress -> discovered(containerAddress, configuration,
+                                useSharedNetwork
+                                        ? Optional.of(DEFAULT_HTTP_PORT)
+                                        : containerAddress.getRunningContainer().getPortMapping(DEFAULT_HTTP_PORT))))
                 .orElse(null);
+    }
+
+    private static DevServicesResultBuildItem discovered(ContainerAddress containerAddress,
+            Neo4jDevServiceConfig configuration, Optional<Integer> httpPort) {
+
+        var config = new HashMap<String, String>();
+        config.put(NEO4J_URI, "bolt://" + containerAddress.getUrl());
+        config.put(NEO4J_PASSWORD_PROP, configuration.sharedPassword);
+        config.put(NEO4J_BOLT_PORT_DEV_PROP, Integer.toString(containerAddress.getPort()));
+        httpPort.ifPresent(port -> config.put(NEO4J_HTTP_PORT_DEV_PROP, Integer.toString(port)));
+
+        return DevServicesResultBuildItem.discovered()
+                .feature(Feature.NEO4J)
+                .containerId(containerAddress.getId())
+                .config(config)
+                .build();
     }
 
     static final class ExtNeo4jContainer extends Neo4jContainer

@@ -87,6 +87,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "bumann-p",
+      "name": "Philipp Bumann",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5300135?v=4",
+      "profile": "https://github.com/bumann-p",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

@@ -42,6 +42,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/nijuichien"><img src="https://avatars.githubusercontent.com/u/87717636?v=4?s=100" width="100px;" alt="Jui-Chien Ni"/><br /><sub><b>Jui-Chien Ni</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/issues?q=author%3Anijuichien" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/injectives"><img src="https://avatars.githubusercontent.com/u/11927660?v=4?s=100" width="100px;" alt="Dmitriy Tverdiakov"/><br /><sub><b>Dmitriy Tverdiakov</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=injectives" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bumann-p"><img src="https://avatars.githubusercontent.com/u/5300135?v=4?s=100" width="100px;" alt="Philipp Bumann"/><br /><sub><b>Philipp Bumann</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=bumann-p" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/andrei2699"><img src="https://avatars.githubusercontent.com/u/33547890?v=4?s=100" width="100px;" alt="Andrei Timar"/><br /><sub><b>Andrei Timar</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-neo4j/commits?author=andrei2699" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

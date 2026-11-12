@@ -128,7 +128,7 @@ public class Neo4jDriverRecorder {
                     metricsFactory.builder("neo4j.totalInUseCount").buildCounter(
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
                     metricsFactory.builder("neo4j.totalInUseTime").buildCounter(
-                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalInUseTime).orElse(0L));
                 }).orElseGet(() -> metricsFactory -> {
                 });
     }

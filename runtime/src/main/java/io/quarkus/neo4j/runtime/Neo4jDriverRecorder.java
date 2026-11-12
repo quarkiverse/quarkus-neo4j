@@ -113,7 +113,7 @@ public class Neo4jDriverRecorder {
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::acquiring).orElse(0));
                     metricsFactory.builder("neo4j.closed").buildCounter(
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::closed).orElse(0L));
-                    metricsFactory.builder("neo4j.created").buildCounter(
+                    metricsFactory.builder("neo4j.connectionsCreated").buildCounter(
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::created).orElse(0L));
                     metricsFactory.builder("neo4j.creating").buildCounter(
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::creating).orElse(0));

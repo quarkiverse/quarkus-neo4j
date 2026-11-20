@@ -1,22 +1,25 @@
 package io.quarkus.neo4j.deployment;
 
+import jakarta.inject.Singleton;
+
+import org.neo4j.driver.Config;
 import org.neo4j.driver.Driver;
 
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
+import io.quarkus.core.Phase;
+import io.quarkus.core.deployment.service.ServiceRegistrar;
 import io.quarkus.deployment.Feature;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.deployment.annotations.ExecutionTime;
-import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.ExtensionSslNativeSupportBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
-import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedPackageBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ServiceProviderBuildItem;
 import io.quarkus.deployment.metrics.MetricsFactoryConsumerBuildItem;
-import io.quarkus.neo4j.runtime.Neo4jDriverRecorder;
-import io.quarkus.runtime.RuntimeValue;
+import io.quarkus.neo4j.runtime.Neo4jConfiguration;
+import io.quarkus.neo4j.runtime.Neo4jDriverSupport;
+import io.quarkus.neo4j.runtime.Neo4jMetricsBinder;
 import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
 
 class Neo4jDriverProcessor {
@@ -31,38 +34,52 @@ class Neo4jDriverProcessor {
     }
 
     @BuildStep
-    @Record(ExecutionTime.RUNTIME_INIT)
-    Neo4jDriverConfigBuildItem metricsObservationProvider(Neo4jDriverRecorder recorder) {
-        return new Neo4jDriverConfigBuildItem(recorder.buildConfig());
+    void configureDriver(ServiceRegistrar reg,
+            BuildProducer<SyntheticBeanBuildItem> syntheticBeans,
+            BuildProducer<MetricsFactoryConsumerBuildItem> metrics) {
+
+        // The driver is a client connection to an external data system, so it belongs to the DATA phase,
+        // which also makes it available to INIT services such as migrations
+        reg.forService(Config.class)
+                .atPhase(Phase.DATA)
+                .require(Neo4jConfiguration.class)
+                .onStart((ctx, configuration) -> Neo4jDriverSupport.buildConfig(configuration));
+
+        reg.forService(Driver.class)
+                .atPhase(Phase.DATA)
+                .require(Neo4jConfiguration.class)
+                .require(Config.class)
+                // Don't use a method reference here: the service lambda's body is copied into generated code
+                // in another package, and a method reference would copy initializeDriver itself, including its
+                // calls to package-private helpers.
+                .onStart((ctx, configuration, config) -> Neo4jDriverSupport.initializeDriver(ctx, configuration, config));
+
+        // The service value is handed out exactly once, so the bean must not be dependent-scoped
+        syntheticBeans.produce(SyntheticBeanBuildItem.configure(Driver.class)
+                .scope(Singleton.class)
+                .serviceValue(Driver.class)
+                .setRuntimeInit()
+                .done());
+
+        reg.forService(Neo4jMetricsBinder.class)
+                .require(Config.class)
+                .onStart((ctx, config) -> Neo4jDriverSupport.registerMetrics(config));
+        metrics.produce(new MetricsFactoryConsumerBuildItem(metricsFactoryConsumer(reg)));
     }
 
-    @BuildStep
-    @Record(ExecutionTime.RUNTIME_INIT)
-    Neo4jDriverBuildItem configureDriverProducer(Neo4jDriverRecorder recorder,
-            Neo4jDriverConfigBuildItem driverConfig,
-            BuildProducer<SyntheticBeanBuildItem> syntheticBeans,
-            ShutdownContextBuildItem shutdownContext) {
-
-        RuntimeValue<Driver> driverHolder = recorder.initializeDriver(shutdownContext, driverConfig.getValue());
-        syntheticBeans
-                .produce(SyntheticBeanBuildItem.configure(Driver.class).runtimeValue(driverHolder).setRuntimeInit().done());
-
-        return new Neo4jDriverBuildItem(driverHolder);
+    /**
+     * The consumers of {@link MetricsFactoryConsumerBuildItem} (i.e. Micrometer) still pass the consumer to their bytecode
+     * recorders, so we need to bridge our service to a recorder proxy until that build item is migrated.
+     */
+    @SuppressWarnings("deprecation")
+    private static Neo4jMetricsBinder metricsFactoryConsumer(ServiceRegistrar reg) {
+        return reg.getRecorderProxy(Neo4jMetricsBinder.class);
     }
 
     @BuildStep
     HealthBuildItem addHealthCheck(Neo4jBuildTimeConfig buildTimeConfig) {
         return new HealthBuildItem("io.quarkus.neo4j.runtime.health.Neo4jHealthCheck",
                 buildTimeConfig.healthEnabled());
-    }
-
-    @BuildStep
-    @Record(ExecutionTime.RUNTIME_INIT)
-    void metrics(
-            Neo4jDriverRecorder recorder,
-            Neo4jDriverConfigBuildItem driverConfig,
-            BuildProducer<MetricsFactoryConsumerBuildItem> metrics) {
-        metrics.produce(new MetricsFactoryConsumerBuildItem(recorder.registerMetrics(driverConfig.getValue())));
     }
 
     @BuildStep
@@ -106,6 +123,7 @@ class Neo4jDriverProcessor {
         classes.produce(new RuntimeInitializedClassBuildItem("io.netty.util.internal.logging.Log4JLogger"));
 
         // See https://github.com/quarkiverse/quarkus-neo4j/pull/208#issuecomment-1784849182
-        classes.produce(new RuntimeInitializedClassBuildItem("io.vertx.core.net.impl.SSLHelper"));
+        // (it creates io.netty.handler.ssl.ClientAuth instances, it was io.vertx.core.net.impl.SSLHelper in Vert.x 4)
+        classes.produce(new RuntimeInitializedClassBuildItem("io.vertx.core.internal.tls.SslContextManager"));
     }
 }

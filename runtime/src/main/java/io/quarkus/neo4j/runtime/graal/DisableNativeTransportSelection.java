@@ -1,7 +1,6 @@
 package io.quarkus.neo4j.runtime.graal;
 
 import java.util.Map;
-import java.util.concurrent.ThreadFactory;
 
 import org.neo4j.bolt.connection.netty.impl.async.connection.NettyTransport;
 
@@ -9,8 +8,9 @@ import com.oracle.svm.core.annotate.Substitute;
 import com.oracle.svm.core.annotate.TargetClass;
 
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
 import io.netty.channel.local.LocalAddress;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
 
 final class DisableNativeTransportSelection {
@@ -20,7 +20,8 @@ final class DisableNativeTransportSelection {
 
         @Substitute
         public EventLoopGroup newEventLoopGroup(int threadCount) {
-            return new DriverEventLoopGroup(threadCount);
+            return new MultiThreadIoEventLoopGroup(threadCount,
+                    new DefaultThreadFactory("Neo4jDriverIO", true, Thread.MAX_PRIORITY), NioIoHandler.newFactory());
         }
 
     }
@@ -35,17 +36,6 @@ final class DisableNativeTransportSelection {
                 Map<String, ?> additionalConfig,
                 String defaultNettyTransport) {
             return NettyTransport.nio();
-        }
-    }
-
-    private static final class DriverEventLoopGroup extends NioEventLoopGroup {
-        DriverEventLoopGroup(int nThreads) {
-            super(nThreads);
-        }
-
-        @Override
-        protected ThreadFactory newDefaultThreadFactory() {
-            return new DefaultThreadFactory("Neo4jDriverIO", true, Thread.MAX_PRIORITY);
         }
     }
 

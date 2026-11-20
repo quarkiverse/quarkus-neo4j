@@ -12,7 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.neo4j.driver.AuthTokens;
 
-class Neo4jDriverRecorderTest {
+class Neo4jDriverSupportTest {
 
     @Test // GH-168
     void authTokenShouldBeNoneWhenDisabled() {
@@ -21,7 +21,7 @@ class Neo4jDriverRecorderTest {
         var authentication = mock(Neo4jConfiguration.Authentication.class);
         when(authentication.disabled()).thenReturn(true);
         when(configuration.authentication()).thenReturn(authentication);
-        var authToken = Neo4jDriverRecorder.getAuthToken(configuration);
+        var authToken = Neo4jDriverSupport.getAuthToken(configuration);
         assertThat(authToken).isEqualTo(AuthTokens.none());
     }
 
@@ -34,7 +34,7 @@ class Neo4jDriverRecorderTest {
         when(authentication.username()).thenReturn("foo");
         when(authentication.password()).thenReturn("bar");
         when(configuration.authentication()).thenReturn(authentication);
-        var authToken = Neo4jDriverRecorder.getAuthToken(configuration);
+        var authToken = Neo4jDriverSupport.getAuthToken(configuration);
         assertThat(authToken).isEqualTo(AuthTokens.basic("foo", "bar"));
     }
 
@@ -45,7 +45,7 @@ class Neo4jDriverRecorderTest {
         var authentication = mock(Neo4jConfiguration.Authentication.class);
         when(authentication.value()).thenReturn(Optional.of("foo/bar"));
         when(configuration.authentication()).thenReturn(authentication);
-        var authToken = Neo4jDriverRecorder.getAuthToken(configuration);
+        var authToken = Neo4jDriverSupport.getAuthToken(configuration);
         assertThat(authToken).isEqualTo(AuthTokens.basic("foo", "bar"));
     }
 
@@ -58,7 +58,7 @@ class Neo4jDriverRecorderTest {
         when(authentication.username()).thenReturn("wurst");
         when(authentication.password()).thenReturn("salat");
         when(configuration.authentication()).thenReturn(authentication);
-        var authToken = Neo4jDriverRecorder.getAuthToken(configuration);
+        var authToken = Neo4jDriverSupport.getAuthToken(configuration);
         assertThat(authToken).isEqualTo(AuthTokens.basic("foo", "bar"));
     }
 
@@ -66,7 +66,7 @@ class Neo4jDriverRecorderTest {
     @ValueSource(strings = { "foo", "/foo", "foo/" })
     void invalidAuthValuesShouldBeCaught(String value) {
 
-        assertThatIllegalArgumentException().isThrownBy(() -> Neo4jDriverRecorder.toAuthToken(value))
+        assertThatIllegalArgumentException().isThrownBy(() -> Neo4jDriverSupport.toAuthToken(value))
                 .withMessage(
                         "Invalid value for NEO4J_AUTH, the only supported format is <username>/<password>, neither username nor password are optional");
     }

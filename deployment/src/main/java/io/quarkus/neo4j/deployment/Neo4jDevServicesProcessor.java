@@ -117,11 +117,11 @@ class Neo4jDevServicesProcessor {
                     return container
                             .withSharedServiceLabel(launchMode.getLaunchMode(), configuration.serviceName);
                 })
-                .configProvider(Map.of(
-                        NEO4J_URI, container -> "bolt://" + container.getHost() + ":" + container.getBoltPort(),
-                        NEO4J_PASSWORD_PROP, ExtNeo4jContainer::getAdminPassword,
-                        NEO4J_BOLT_PORT_DEV_PROP, container -> Integer.toString(container.getBoltPort()),
-                        NEO4J_HTTP_PORT_DEV_PROP, container -> Integer.toString(container.getHttpPort())))
+                .configProvider(container -> Map.of(
+                        NEO4J_URI, "bolt://" + container.getHost() + ":" + container.getBoltPort(),
+                        NEO4J_PASSWORD_PROP, container.getAdminPassword(),
+                        NEO4J_BOLT_PORT_DEV_PROP, Integer.toString(container.getBoltPort()),
+                        NEO4J_HTTP_PORT_DEV_PROP, Integer.toString(container.getHttpPort())))
                 .postStartHook(container -> {
                     log.infof("Dev Services started a Neo4j container reachable at %s",
                             container.getConnectionInfo());

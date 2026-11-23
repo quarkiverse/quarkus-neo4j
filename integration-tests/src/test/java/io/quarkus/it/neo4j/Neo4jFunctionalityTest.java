@@ -174,7 +174,7 @@ public class Neo4jFunctionalityTest {
                 .then().extract().body().asInputStream())).lines()) {
             var lines = body.toList();
             lines.forEach(System.out::println);
-            for (var metric : new String[] { "acquired", "created", "totalAcquisitionTime", "totalConnectionTime",
+            for (var metric : new String[] { "acquired", "connectionsCreated", "totalAcquisitionTime", "totalConnectionTime",
                     "totalInUseTime" }) {
                 assertTrue(lines.stream().anyMatch(l -> l.matches("neo4j_%s_total \\d+.\\d+".formatted(metric))));
             }

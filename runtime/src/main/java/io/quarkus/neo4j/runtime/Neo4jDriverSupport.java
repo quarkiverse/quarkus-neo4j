@@ -5,7 +5,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import java.net.URI;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import org.jboss.logging.Logger;
 import org.neo4j.driver.AuthToken;
@@ -19,17 +18,17 @@ import org.neo4j.driver.observation.metrics.Metrics;
 import org.neo4j.driver.observation.metrics.MetricsObservationProvider;
 
 import io.quarkus.bootstrap.graal.ImageInfo;
-import io.quarkus.runtime.RuntimeValue;
-import io.quarkus.runtime.ShutdownContext;
-import io.quarkus.runtime.annotations.Recorder;
+import io.quarkus.core.StartContext;
 import io.quarkus.runtime.configuration.ConfigurationException;
-import io.quarkus.runtime.metrics.MetricsFactory;
 import io.quarkus.runtime.ssl.SslContextConfiguration;
 
-@Recorder
-public class Neo4jDriverRecorder {
+/**
+ * Runtime support for creating the Neo4j driver, its configuration and metrics. The static methods in here are invoked from
+ * the services registered by the deployment processor.
+ */
+public final class Neo4jDriverSupport {
 
-    private static final Logger log = Logger.getLogger(Neo4jDriverRecorder.class);
+    private static final Logger log = Logger.getLogger(Neo4jDriverSupport.class);
 
     private static final boolean HAS_DRIVER_METRICS;
 
@@ -37,37 +36,34 @@ public class Neo4jDriverRecorder {
         boolean metricsObservationProviderFound = true;
         try {
             Class.forName("org.neo4j.driver.observation.metrics.MetricsObservationProvider", false,
-                    Neo4jDriverRecorder.class.getClassLoader());
+                    Neo4jDriverSupport.class.getClassLoader());
         } catch (ClassNotFoundException ex) {
             metricsObservationProviderFound = false;
         }
         HAS_DRIVER_METRICS = metricsObservationProviderFound;
     }
 
-    private final RuntimeValue<Neo4jConfiguration> configuration;
-
-    public Neo4jDriverRecorder(RuntimeValue<Neo4jConfiguration> configuration) {
-        this.configuration = configuration;
+    private Neo4jDriverSupport() {
     }
 
-    public RuntimeValue<Config> buildConfig() {
+    public static Config buildConfig(Neo4jConfiguration configuration) {
         Config.ConfigBuilder configBuilder = createBaseConfig();
-        configureSsl(configBuilder, configuration.getValue());
-        configurePoolSettings(configBuilder, configuration.getValue().pool());
-        configBuilder.withMaxTransactionRetryTime(configuration.getValue().maxTransactionRetryTime().toMillis(),
+        configureSsl(configBuilder, configuration);
+        configurePoolSettings(configBuilder, configuration.pool());
+        configBuilder.withMaxTransactionRetryTime(configuration.maxTransactionRetryTime().toMillis(),
                 TimeUnit.MILLISECONDS);
 
-        return new RuntimeValue<>(configBuilder.build());
+        return configBuilder.build();
     }
 
-    public RuntimeValue<Driver> initializeDriver(ShutdownContext shutdownContext, RuntimeValue<Config> config) {
+    public static Driver initializeDriver(StartContext context, Neo4jConfiguration configuration, Config config) {
 
-        String uri = configuration.getValue().uri();
-        AuthToken authToken = getAuthToken(configuration.getValue());
+        String uri = configuration.uri();
+        AuthToken authToken = getAuthToken(configuration);
 
-        Driver driver = GraphDatabase.driver(uri, authToken, config.getValue());
-        shutdownContext.addShutdownTask(driver::close);
-        return new RuntimeValue<>(driver);
+        Driver driver = GraphDatabase.driver(uri, authToken, config);
+        context.onStop(driver::close);
+        return driver;
     }
 
     static AuthToken getAuthToken(Neo4jConfiguration configuration) {
@@ -75,7 +71,7 @@ public class Neo4jDriverRecorder {
             return AuthTokens.none();
         }
         return configuration.authentication().value()
-                .map(Neo4jDriverRecorder::toAuthToken)
+                .map(Neo4jDriverSupport::toAuthToken)
                 .orElseGet(
                         () -> AuthTokens.basic(configuration.authentication().username(),
                                 configuration.authentication().password()));
@@ -92,19 +88,19 @@ public class Neo4jDriverRecorder {
         return AuthTokens.basic(value.substring(0, idx), value.substring(idx + 1));
     }
 
-    public Consumer<MetricsFactory> registerMetrics(RuntimeValue<Config> config) {
+    public static Neo4jMetricsBinder registerMetrics(Config config) {
 
         if (!HAS_DRIVER_METRICS) {
             return metricsFactory -> {
             };
         }
 
-        return config.getValue().observationProvider()
+        return config.observationProvider()
                 .filter(MetricsObservationProvider.class::isInstance)
                 .map(MetricsObservationProvider.class::cast)
                 .map(MetricsObservationProvider::metrics)
                 .map(Metrics::connectionPoolMetrics)
-                .map(driverMetrics -> (Consumer<MetricsFactory>) metricsFactory -> {
+                .map(driverMetrics -> (Neo4jMetricsBinder) metricsFactory -> {
                     var connectionPoolMetrics = driverMetrics.stream().findFirst();
                     // if the pool hasn't been used yet, the ConnectionPoolMetrics object doesn't exist, so use zeros instead
                     metricsFactory.builder("neo4j.acquired").buildCounter(
@@ -113,7 +109,7 @@ public class Neo4jDriverRecorder {
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::acquiring).orElse(0));
                     metricsFactory.builder("neo4j.closed").buildCounter(
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::closed).orElse(0L));
-                    metricsFactory.builder("neo4j.created").buildCounter(
+                    metricsFactory.builder("neo4j.connectionsCreated").buildCounter(
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::created).orElse(0L));
                     metricsFactory.builder("neo4j.creating").buildCounter(
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::creating).orElse(0));
@@ -128,7 +124,7 @@ public class Neo4jDriverRecorder {
                     metricsFactory.builder("neo4j.totalInUseCount").buildCounter(
                             () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
                     metricsFactory.builder("neo4j.totalInUseTime").buildCounter(
-                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalInUseCount).orElse(0L));
+                            () -> connectionPoolMetrics.map(ConnectionPoolMetrics::totalInUseTime).orElse(0L));
                 }).orElseGet(() -> metricsFactory -> {
                 });
     }
